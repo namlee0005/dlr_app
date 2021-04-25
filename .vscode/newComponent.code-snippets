@@ -1,0 +1,13 @@
+{
+  "newComponent": {
+    "prefix": ["newc"],
+    "body": [
+      "import React from 'react';",
+      "",
+      "const ${0} = () => { return null; }",
+      "",
+      "export default ${0}"
+    ],
+    "description": "New functional components."
+  }
+}
