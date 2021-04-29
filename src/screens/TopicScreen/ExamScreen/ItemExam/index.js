@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
@@ -6,30 +6,19 @@ import { StyleSheet, Dimensions } from 'react-native';
 import Box from '@src/components/Box';
 import FastImage from 'react-native-fast-image';
 import Underlined from '@src/components/Underlined';
-import * as Store from '@src/store';
+import { v4 as uuid } from 'uuid';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-const ItemExam = ({
-  item,
-  index,
-  flatIndex,
-  exam,
-  arrayHeight,
-  setArrayHeight,
-}) => {
+const ItemExam = ({ item, index, flatIndex, arrayHeight, setArrayHeight }) => {
   const [checkBoxs, setCheckBoxs] = useState([]);
-  const { dispatch } = useContext(Store.StoreContext);
+
   useEffect(() => {
     //init checkbox
-    let length = exam?.questions[flatIndex]?.answer.length;
-    if (!length) {
-      return;
-    }
     let array = [];
-    for (let i = 0; i < length; i++) {
-      if (exam?.questions[flatIndex]?.selected !== undefined) {
-        if (i === exam?.questions[flatIndex]?.selected) {
+    for (let i = 0; i < 4; i++) {
+      if (item?.selected !== undefined) {
+        if (i === item?.selected) {
           array.push({ index: i, isSelected: true });
         } else {
           array.push({ index: i, isSelected: false });
@@ -39,19 +28,7 @@ const ItemExam = ({
       }
     }
     setCheckBoxs(array);
-  }, [flatIndex, exam?.questions]);
-
-  const _onLayout = (event) => {
-    var { height } = event.nativeEvent.layout;
-    let array = [...arrayHeight];
-    array.push({ index, height });
-    setArrayHeight(array);
-  };
-
-  const getHeight = () => {
-    let itemHeight = arrayHeight.find((e) => e.index === flatIndex);
-    return itemHeight?.height;
-  };
+  }, [flatIndex, item]);
 
   const getBackground = useCallback(
     (indexAnswer) => {
@@ -75,52 +52,49 @@ const ItemExam = ({
         }
       });
       setCheckBoxs(array);
-      dispatch({
-        type: 'UPDATE_RESULT',
-        payload: {
-          indexAnswer,
-          flatIndex,
-          exam,
-        },
-      });
     },
-    [checkBoxs, dispatch, flatIndex, exam],
+    [checkBoxs],
   );
 
-  const renderAnswer = (answers) => {
-    return answers.map((e) => {
+  const renderAnswer = (answers, number) => {
+    if (answers == null) {
+      return null;
+    } else {
       return (
-        <Box key={e.stt.toString()}>
+        <Box key={uuid()}>
           <Underlined style={styles.answerUnderlined} />
           <TouchableBox
             style={styles.touAnswer}
-            onPress={() => toggleAnswer(e.stt - 1)}
+            onPress={() => toggleAnswer(number)}
           >
             <Box
               style={[
                 styles.answer,
-                { backgroundColor: getBackground(e.stt - 1) },
+                { backgroundColor: getBackground(number) },
               ]}
             >
-              <Typography style={styles.textAnswer}>{e.stt}</Typography>
+              <Typography style={styles.textAnswer}>{number + 1}</Typography>
             </Box>
-            <Typography>{e.content}</Typography>
+            <Typography>{answers}</Typography>
           </TouchableBox>
         </Box>
       );
-    });
+    }
   };
 
   return (
-    <Box width={DEVICE_WIDTH} height={getHeight()}>
-      <Box onLayout={_onLayout}>
-        <Typography>{item.quest}</Typography>
+    <Box width={DEVICE_WIDTH}>
+      <Box>
+        <Typography>{item?.question}</Typography>
         {item.image ? (
           <Box justify="center" align="center">
-            <FastImage source={item.image} style={styles.image} />
+            <FastImage source={item?.image} style={styles.image} />
           </Box>
         ) : null}
-        {renderAnswer(item.answer)}
+        {renderAnswer(item?.answer1, 0)}
+        {renderAnswer(item?.answer2, 1)}
+        {renderAnswer(item?.answer3, 2)}
+        <Box margin={[0, 0, 10, 0]}>{renderAnswer(item?.answer4, 3)}</Box>
       </Box>
     </Box>
   );

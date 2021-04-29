@@ -1,4 +1,4 @@
-import { objectQuestions } from '@src/realms/RealmsObject';
+import { objectQuestions } from '@src/realms/realm';
 
 const randomItem = (items) => {
   return items[Math.floor(Math.random() * items?.length)];

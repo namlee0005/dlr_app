@@ -1,3 +1,5 @@
+import Realm from 'realm';
+
 // Define your models and their properties
 import { v4 as uuid } from 'uuid';
 
@@ -72,4 +74,6 @@ export const objectQuestions = (realmObject) => {
   };
 };
 
-export const RealmSchemas = [TopicExam, Questions, ExamA1];
+export default new Realm({
+  schema: [ExamA1, TopicExam, Questions],
+});

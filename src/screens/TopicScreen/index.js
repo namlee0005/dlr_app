@@ -6,12 +6,12 @@ import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
 import ImageIcon from '@src/components/ImageIcon';
 import { convertLongToTime1 } from '@src/utils/formatters/date';
-import useRealms from '@src/hooks/useRealms';
+import realm from '@src/realms/realm';
 import { v4 as uuid } from 'uuid';
 const ItemTopic = ({ item, navigation }) => {
   const onPress = useCallback(() => {
     navigation.navigate('ExamScreen', {
-      exam: item,
+      idExam: item?.id,
     });
   }, [item, navigation]);
 
@@ -74,7 +74,7 @@ const ItemTopic = ({ item, navigation }) => {
 
 const TopicScreen = ({ navigation }) => {
   const { dispatch } = useContext(StoreContext);
-  const topicExam = useRealms('TopicExam');
+  const topicExam = realm.objects('TopicExam');
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (

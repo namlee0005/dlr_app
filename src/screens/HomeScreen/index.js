@@ -6,7 +6,8 @@ import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
 import colors from '@src/utils/colors';
-import useRealms from '@src/hooks/useRealms';
+import realm from '@src/realms/realm';
+
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const ItemHome = ({ item, navigation, length }) => {
@@ -47,14 +48,17 @@ const ItemHome = ({ item, navigation, length }) => {
 
 const HomeScreen = ({ navigation }) => {
   const { state } = useContext(StoreContext);
-  const data1 = useRealms('TopicExam');
   const renderItem = useCallback(
     ({ item }) => {
       return (
-        <ItemHome item={item} navigation={navigation} length={data1.length} />
+        <ItemHome
+          item={item}
+          navigation={navigation}
+          length={realm.objects('TopicExam')?.length}
+        />
       );
     },
-    [navigation, data1],
+    [navigation],
   );
 
   return (

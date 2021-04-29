@@ -65,7 +65,7 @@ const HomeStack = () => {
         name="ExamScreen"
         component={ExamScreen}
         options={({ route }) => ({
-          title: capitalize(route.params.exam.title),
+          title: capitalize(route?.params?.exam?.title),
           headerLeft,
         })}
       />
