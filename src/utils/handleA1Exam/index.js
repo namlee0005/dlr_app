@@ -31,16 +31,22 @@ export const createA1Exam = (id, realm) => {
     arrRandom.selected = -1;
     let rdNumber = Math.floor(Math.random() * 15);
     //tao random 15 cau hoi duong bo
+    let index = 1;
     while (arr1.length < 15) {
       if (arr1.length - 1 === rdNumber) {
-        arr1.push(objectQuestions(arrRandom));
+        let tempRd = objectQuestions(arrRandom);
+        tempRd.index = index;
+        arr1.push(tempRd);
+        index++;
         continue;
       }
       let temp = randomItem(roadTrafficLaw);
       temp.selected = -1;
+      temp.index = index;
       if (!arr1.includes(temp)) {
         arr1.push(objectQuestions(temp));
       }
+      index++;
     }
 
     let trafficSigns = realm?.objects('ExamA1').filtered('type = 5');
@@ -48,9 +54,11 @@ export const createA1Exam = (id, realm) => {
     while (arr1.length < 20) {
       let temp = randomItem(trafficSigns);
       temp.selected = -1;
+      temp.index = index;
       if (!arr1.includes(temp)) {
         arr1.push(objectQuestions(temp));
       }
+      index++;
     }
 
     let sentenceSaHinh = realm?.objects('ExamA1').filtered('type = 6');
@@ -58,14 +66,16 @@ export const createA1Exam = (id, realm) => {
     while (arr1.length < 25) {
       let temp = randomItem(sentenceSaHinh);
       temp.selected = -1;
+      temp.index = index;
       if (!arr1.includes(temp)) {
         arr1.push(objectQuestions(temp));
       }
+      index++;
     }
+
     topicExam.questions = arr1;
     return topicExam;
   } catch (error) {
-    // console.log(error);
     return false;
   }
 };

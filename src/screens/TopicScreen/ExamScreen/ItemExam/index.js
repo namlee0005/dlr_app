@@ -7,18 +7,19 @@ import Box from '@src/components/Box';
 import FastImage from 'react-native-fast-image';
 import Underlined from '@src/components/Underlined';
 import { v4 as uuid } from 'uuid';
+import realm from '@src/realms/realm';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-const ItemExam = ({ item, index, flatIndex, arrayHeight, setArrayHeight }) => {
+const ItemExam = ({ item, flatIndex, idExam }) => {
   const [checkBoxs, setCheckBoxs] = useState([]);
-
+  // console.log(item, 'item');
   useEffect(() => {
     //init checkbox
     let array = [];
     for (let i = 0; i < 4; i++) {
       if (item?.selected !== undefined) {
-        if (i === item?.selected) {
+        if (i === item?.selected - 1) {
           array.push({ index: i, isSelected: true });
         } else {
           array.push({ index: i, isSelected: false });
@@ -52,8 +53,15 @@ const ItemExam = ({ item, index, flatIndex, arrayHeight, setArrayHeight }) => {
         }
       });
       setCheckBoxs(array);
+      const exam = realm
+        .objects('TopicExam')
+        .filtered('id =  ' + idExam)
+        .map((i) => i)[0];
+      realm.write(() => {
+        exam.questions[flatIndex].selected = indexAnswer + 1;
+      });
     },
-    [checkBoxs],
+    [checkBoxs, flatIndex, idExam],
   );
 
   const renderAnswer = (answers, number) => {
@@ -86,7 +94,7 @@ const ItemExam = ({ item, index, flatIndex, arrayHeight, setArrayHeight }) => {
     <Box width={DEVICE_WIDTH}>
       <Box>
         <Typography>{item?.question}</Typography>
-        {item.image ? (
+        {item?.image ? (
           <Box justify="center" align="center">
             <FastImage source={item?.image} style={styles.image} />
           </Box>

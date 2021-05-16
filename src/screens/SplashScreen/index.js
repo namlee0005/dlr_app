@@ -18,11 +18,9 @@ const SplashScreen = ({ navigation }) => {
           });
         });
         let topicExam = [];
-
         for (let i = 0; i < 6; i++) {
           topicExam.push(createA1Exam(i + 1, realm));
         }
-
         realm.write(() => {
           realm.delete(realm.objects('TopicExam'));
           topicExam?.map((item) => {
@@ -30,7 +28,6 @@ const SplashScreen = ({ navigation }) => {
           });
         });
       } catch (e) {
-        // console.log(e);
         realm.close();
       }
     },

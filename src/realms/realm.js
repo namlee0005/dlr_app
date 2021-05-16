@@ -52,6 +52,7 @@ const Questions = {
     urlImage: 'string?',
     isSentenceParalysis: 'int?',
     selected: 'int?',
+    index: 'int?',
   },
 };
 
@@ -71,6 +72,7 @@ export const objectQuestions = (realmObject) => {
     urlImage: realmObject?.urlImage ? realmObject?.urlImage : null,
     isSentenceParalysis: realmObject?.isSentenceParalysis,
     selected: realmObject?.selected ? realmObject?.selected : null,
+    index: realmObject?.index ? realmObject?.index : null,
   };
 };
 
