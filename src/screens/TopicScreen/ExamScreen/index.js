@@ -12,6 +12,27 @@ import Box from '@src/components/Box';
 import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
 import realm from '@src/realms/realm';
+import { useNavigation } from '@react-navigation/native';
+
+const HeaderLeft = ({ time, idExam }) => {
+  const navigation = useNavigation();
+  const goBack = useCallback(() => {
+    const exam = realm
+      .objects('TopicExam')
+      .filtered('id =  ' + idExam)
+      .map((i) => i)[0];
+    realm.write(() => {
+      exam.time = time;
+    });
+    navigation.pop();
+  }, [idExam, navigation, time]);
+
+  return (
+    <TouchableBox square={40} onPress={goBack} justify="center" align="center">
+      <ImageIcon name="backArrow" square={24} />
+    </TouchableBox>
+  );
+};
 
 const ExamScreen = ({ navigation, route }) => {
   const [exam] = useState(
@@ -23,6 +44,11 @@ const ExamScreen = ({ navigation, route }) => {
   const [countDown, setCountDown] = useState(exam?.time);
   const [itemExam, setItemExam] = useState(exam?.questions[0]);
   const [flatIndex, setFlatIndex] = useState(0);
+
+  const headerLeft = useCallback(
+    () => <HeaderLeft time={countDown} idExam={route.params.idExam} />,
+    [countDown, route.params.idExam],
+  );
 
   const onNext = useCallback(() => {
     if (exam?.questions.length === flatIndex) {
@@ -56,8 +82,9 @@ const ExamScreen = ({ navigation, route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: `${exam?.title} ( ${convertLongToTime(countDown)} )`,
+      headerLeft,
     });
-  }, [countDown, navigation, exam?.title]);
+  }, [countDown, navigation, exam?.title, headerLeft]);
 
   return (
     <Box padding={[0, 10]} background="white">
