@@ -6,13 +6,13 @@ import React, {
 } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import Box from '@src/components/Box';
-import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
+import TouchableBox from '@src/components/TouchableBox';
 import ImageIcon from '@src/components/ImageIcon';
 import { convertLongToTime1 } from '@src/utils/formatters/date';
 import realm from '@src/realms/realm';
 import { v4 as uuid } from 'uuid';
-
+import CircleExam from '@src/components/CircleExam';
 import { createA1Exam } from '@src/utils/handleA1Exam';
 
 const ItemTopic = ({ item, navigation }) => {
@@ -114,13 +114,16 @@ const TopicScreen = ({ navigation }) => {
     [navigation],
   );
   return (
-    <Box margin={[0, 16]}>
+    <Box flex={1} margin={[0, 16]}>
       <FlatList
         data={topicExam}
         renderItem={renderItem}
         keyExtractor={() => uuid()}
         extraData={topicExam}
       />
+      <Box>
+        <CircleExam color="green" percent={50} width={66} />
+      </Box>
     </Box>
   );
 };
