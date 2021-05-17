@@ -1,6 +1,10 @@
-import React, { useCallback, useContext } from 'react';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+  useState,
+} from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { StoreContext } from '@src/store';
 import Box from '@src/components/Box';
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
@@ -8,6 +12,9 @@ import ImageIcon from '@src/components/ImageIcon';
 import { convertLongToTime1 } from '@src/utils/formatters/date';
 import realm from '@src/realms/realm';
 import { v4 as uuid } from 'uuid';
+
+import { createA1Exam } from '@src/utils/handleA1Exam';
+
 const ItemTopic = ({ item, navigation }) => {
   const onPress = useCallback(() => {
     navigation.navigate('ExamScreen', {
@@ -73,9 +80,9 @@ const ItemTopic = ({ item, navigation }) => {
 };
 
 const TopicScreen = ({ navigation }) => {
-  const { dispatch } = useContext(StoreContext);
-  const topicExam = realm.objects('TopicExam');
-  React.useLayoutEffect(() => {
+  const [topicExam, setTopicExam] = useState(realm.objects('TopicExam'));
+
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
@@ -85,8 +92,19 @@ const TopicScreen = ({ navigation }) => {
     });
   });
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      setTopicExam(realm.objects('TopicExam'));
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   const handleDecrease = () => {
-    dispatch({ type: 'ADD_EXAM' });
+    const temp = createA1Exam(topicExam.length + 1, realm);
+    realm.write(() => {
+      realm.create('TopicExam', temp);
+    });
+    setTopicExam(realm.objects('TopicExam'));
   };
 
   const renderItem = useCallback(

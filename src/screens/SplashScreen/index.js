@@ -9,7 +9,7 @@ const SplashScreen = ({ navigation }) => {
   const { run } = useRequest(getAllA1, {
     manual: true,
     onSuccess: (data) => {
-      //onSucesss
+      //on Success
       try {
         realm.write(() => {
           realm.delete(realm.objects('ExamA1'));
