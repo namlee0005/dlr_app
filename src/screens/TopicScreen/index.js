@@ -16,34 +16,54 @@ import CircleExam from '@src/components/CircleExam';
 import { createA1Exam } from '@src/utils/handleA1Exam';
 
 const ItemTopic = ({ item, navigation }) => {
+  const numberAnswered = useCallback(() => {
+    const exam = realm
+      .objects('TopicExam')
+      .filtered('id =  ' + item?.id)
+      .map((i) => i)[0];
+    if (exam?.status === 3) {
+      return exam?.total;
+    }
+    return exam?.questions.filter((i) => i.selected !== -1).length;
+  }, [item?.id]);
+
   const onPress = useCallback(() => {
+    const exam = realm
+      .objects('TopicExam')
+      .filtered('id =  ' + item?.id)
+      .map((i) => i)[0];
+    realm.write(() => {
+      if (exam.status !== 3) {
+        exam.status = 2;
+      }
+    });
     navigation.navigate('ExamScreen', {
       idExam: item?.id,
     });
   }, [item, navigation]);
 
   const getColor = useCallback(() => {
-    if (item?.status === 0) {
-      return 'green';
-    } else if (item?.status === 1) {
-      return '#dbdb32';
+    if (item?.status === 1) {
+      return 'rgb(48,46,167) ';
+    } else if (item?.status === 2) {
+      return 'rgb(242,153,74)';
     }
-    return 'red';
+    return item?.total > 21 ? 'rgb(0,227,64)' : 'rgb(226,27,0)';
   }, [item]);
   // 0: làm bài, 1: đang làm, 2: xong
   const getContent = useCallback(() => {
-    if (item?.status === 0) {
+    if (item?.status === 1) {
       return '25 câu/20 phút';
-    } else if (item?.status === 1) {
+    } else if (item?.status === 2) {
       return `Còn ${convertLongToTime1(item?.time)}`;
     }
     return 'yellow';
   }, [item]);
 
   const getAction = useCallback(() => {
-    if (item?.status === 0) {
+    if (item?.status === 1) {
       return 'LÀM BÀI';
-    } else if (item?.status === 1) {
+    } else if (item?.status === 2) {
       return 'TIẾP TỤC';
     }
     return item?.total > 21 ? 'ĐỖ' : 'TRƯỢT';
@@ -51,26 +71,27 @@ const ItemTopic = ({ item, navigation }) => {
 
   return (
     <TouchableBox onPress={onPress} flex={1} margin={[10, 0, 0, 0]}>
-      <Box flex={1} height={60} background={getColor()} borderRadius={21}>
+      <Box height={76} borderRadius={16} shadowDepth={0.4}>
         <Box style={styles.child_card}>
           <Box flexDirection="row" align="center">
-            <Box
-              circle={40}
-              align="center"
-              justify="center"
-              style={styles.circle}
-            >
-              <Typography fontSize={18}>{item.id}</Typography>
-            </Box>
+            <CircleExam
+              color={getColor()}
+              percent={50}
+              width={44}
+              answered={numberAnswered()}
+              total={25}
+            />
             <Box padding={[0, 10, 0, 0]}>
               <Typography>{item.title}</Typography>
               <Typography>{getContent()}</Typography>
             </Box>
           </Box>
           <Box flexDirection="row" align="center">
-            <Typography padding={[0, 0, 0, 10]}>{getAction()}</Typography>
+            <Typography padding={[0, 0, 0, 10]} color={getColor()}>
+              {getAction()}
+            </Typography>
             <TouchableBox onPress={() => null}>
-              <ImageIcon name={'backArrow'} style={styles.image} />
+              <ImageIcon name={'chevronRightGray'} style={styles.image} />
             </TouchableBox>
           </Box>
         </Box>
@@ -121,9 +142,6 @@ const TopicScreen = ({ navigation }) => {
         keyExtractor={() => uuid()}
         extraData={topicExam}
       />
-      <Box>
-        <CircleExam color="green" percent={50} width={66} />
-      </Box>
     </Box>
   );
 };
@@ -141,7 +159,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'white',
-    marginLeft: 5,
     borderBottomLeftRadius: 20,
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,

@@ -6,6 +6,7 @@ const resources = {
   checklist: require('./resources/checklist.png'),
   chevronLeft: require('./resources/chevronLeft.png'),
   chevronRight: require('./resources/chevronRight.png'),
+  chevronRightGray: require('./resources/chevronRightGray.png'),
   delete: require('./resources/delete.png'),
   directionBoard: require('./resources/directionBoard.png'),
   document: require('./resources/document.png'),

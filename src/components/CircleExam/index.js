@@ -2,8 +2,16 @@ import * as React from 'react';
 import Svg, { G, Circle } from 'react-native-svg';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
+import { StyleSheet } from 'react-native';
 
-const CircleExam = ({ percent, color, width, strokeWidth = 2 }) => {
+const CircleExam = ({
+  percent,
+  color,
+  width,
+  strokeWidth = 2,
+  answered,
+  total,
+}) => {
   const size = width;
   const r = (size - strokeWidth) / 2;
   const cx = size / 2;
@@ -35,25 +43,31 @@ const CircleExam = ({ percent, color, width, strokeWidth = 2 }) => {
               r,
             }}
             strokeDasharray={circumference}
-            strokeDashoffset={circumference - (circumference * percent) / 100}
+            strokeDashoffset={
+              circumference - (circumference * (answered / total) * 100) / 100
+            }
           />
         </G>
       </Svg>
-      <Box
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography>20/20</Typography>
+      <Box style={styles.text}>
+        <Typography type="C4">
+          {answered}/{total}
+        </Typography>
       </Box>
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  text: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default CircleExam;

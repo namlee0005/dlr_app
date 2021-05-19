@@ -34,6 +34,26 @@ const HeaderLeft = ({ time, idExam }) => {
   );
 };
 
+const HeaderRight = ({ idExam }) => {
+  const navigation = useNavigation();
+  const exam = realm
+    .objects('TopicExam')
+    .filtered('id =  ' + idExam)
+    .map((i) => i)[0];
+  const goBack = useCallback(() => {
+    realm.write(() => {
+      exam.status = 3;
+    });
+    navigation.pop();
+  }, [exam, navigation]);
+
+  return exam.status ? (
+    <TouchableBox onPress={goBack} margin={[0, 0, 0, 10]}>
+      <Typography type="C2">KẾT THÚC</Typography>
+    </TouchableBox>
+  ) : null;
+};
+
 const ExamScreen = ({ navigation, route }) => {
   const [exam] = useState(
     realm
@@ -48,6 +68,10 @@ const ExamScreen = ({ navigation, route }) => {
   const headerLeft = useCallback(
     () => <HeaderLeft time={countDown} idExam={route.params.idExam} />,
     [countDown, route.params.idExam],
+  );
+  const headerRight = useCallback(
+    () => <HeaderRight idExam={route.params.idExam} />,
+    [route.params.idExam],
   );
 
   const onNext = useCallback(() => {
@@ -83,8 +107,9 @@ const ExamScreen = ({ navigation, route }) => {
     navigation.setOptions({
       title: `${exam?.title} ( ${convertLongToTime(countDown)} )`,
       headerLeft,
+      headerRight,
     });
-  }, [countDown, navigation, exam?.title, headerLeft]);
+  }, [countDown, navigation, exam?.title, headerLeft, headerRight]);
 
   return (
     <Box padding={[0, 10]} background="white">
