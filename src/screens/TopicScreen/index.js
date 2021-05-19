@@ -44,33 +44,36 @@ const ItemTopic = ({ item, navigation }) => {
 
   const getColor = useCallback(() => {
     if (item?.status === 1) {
-      return 'rgb(48,46,167) ';
+      return 'rgb(48,46,167)';
     } else if (item?.status === 2) {
       return 'rgb(242,153,74)';
     }
     return item?.total > 21 ? 'rgb(0,227,64)' : 'rgb(226,27,0)';
   }, [item]);
-  // 0: làm bài, 1: đang làm, 2: xong
-  const getContent = useCallback(() => {
-    if (item?.status === 1) {
-      return '25 câu/20 phút';
-    } else if (item?.status === 2) {
-      return `Còn ${convertLongToTime1(item?.time)}`;
-    }
-    return 'yellow';
-  }, [item]);
+  // 1: làm bài, 2: đang làm, 3: xong
+  const getContent = useCallback(
+    (total) => {
+      if (item?.status === 1) {
+        return '25 câu/20 phút';
+      } else if (item?.status === 2) {
+        return `Còn ${convertLongToTime1(item?.time)}`;
+      }
+      return 'Đúng ' + total + '/25';
+    },
+    [item],
+  );
 
   const getAction = useCallback(() => {
     if (item?.status === 1) {
-      return 'LÀM BÀI';
+      return 'Làm bài';
     } else if (item?.status === 2) {
-      return 'TIẾP TỤC';
+      return 'Tiếp tục';
     }
-    return item?.total > 21 ? 'ĐỖ' : 'TRƯỢT';
+    return item?.total > 21 ? 'Đỗ' : 'Trượt';
   }, [item]);
 
   return (
-    <TouchableBox onPress={onPress} flex={1} margin={[10, 0, 0, 0]}>
+    <TouchableBox onPress={onPress} flex={1} margin={[12, 0, 0, 0]}>
       <Box height={76} borderRadius={16} shadowDepth={0.4}>
         <Box style={styles.child_card}>
           <Box flexDirection="row" align="center">
@@ -81,18 +84,18 @@ const ItemTopic = ({ item, navigation }) => {
               answered={numberAnswered()}
               total={25}
             />
-            <Box padding={[0, 10, 0, 0]}>
-              <Typography>{item.title}</Typography>
-              <Typography>{getContent()}</Typography>
+            <Box padding={[0, 16, 0, 0]}>
+              <Typography fontSize={16}>{item.title}</Typography>
+              <Typography fontSize={13} padding={[8, 0, 0, 0]}>
+                {getContent(item?.total)}
+              </Typography>
             </Box>
           </Box>
-          <Box flexDirection="row" align="center">
-            <Typography padding={[0, 0, 0, 10]} color={getColor()}>
+          <Box flexDirection="row" align="center" justify="center">
+            <Typography padding={[0, 0, 0, 8]} color={getColor()}>
               {getAction()}
             </Typography>
-            <TouchableBox onPress={() => null}>
-              <ImageIcon name={'chevronRightGray'} style={styles.image} />
-            </TouchableBox>
+            <ImageIcon name={'chevronRightGray'} style={styles.image} />
           </Box>
         </Box>
       </Box>

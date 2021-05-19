@@ -7,7 +7,7 @@ const Underlined = ({ style }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { height: 1.5, backgroundColor: '#000000', marginTop: 10 },
+  container: { height: 1.5, backgroundColor: '#000000' },
 });
 
 export default Underlined;

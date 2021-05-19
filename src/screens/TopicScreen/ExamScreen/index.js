@@ -13,43 +13,61 @@ import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
 import realm from '@src/realms/realm';
 import { useNavigation } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
 
-const HeaderLeft = ({ time, idExam }) => {
+const HeaderLeft = ({ time, idExam, title, status, total }) => {
   const navigation = useNavigation();
   const goBack = useCallback(() => {
     const exam = realm
       .objects('TopicExam')
       .filtered('id =  ' + idExam)
       .map((i) => i)[0];
-    realm.write(() => {
-      exam.time = time;
-    });
+    if (exam !== 3) {
+      realm.write(() => {
+        exam.time = time;
+      });
+    }
     navigation.pop();
   }, [idExam, navigation, time]);
 
   return (
-    <TouchableBox square={40} onPress={goBack} justify="center" align="center">
+    <TouchableBox
+      flexDirection="row"
+      margin={[0, 10, 0, 0]}
+      onPress={goBack}
+      justify="center"
+      align="center"
+    >
       <ImageIcon name="backArrow" square={24} />
+      <Typography padding={[0, 10, 0, 0]} fontSize={18} style={styles.title}>
+        {title} ({status === 3 ? total + '/' + 25 : convertLongToTime(time)})
+      </Typography>
     </TouchableBox>
   );
 };
 
 const HeaderRight = ({ idExam }) => {
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const exam = realm
     .objects('TopicExam')
     .filtered('id =  ' + idExam)
     .map((i) => i)[0];
-  const goBack = useCallback(() => {
+
+  const submit = useCallback(() => {
+    let incorrect = exam?.questions.filter(
+      (i) => i.correctAnswer === i.selected,
+    );
     realm.write(() => {
       exam.status = 3;
+      exam.total = incorrect.length;
     });
-    navigation.pop();
-  }, [exam, navigation]);
+  }, [exam]);
 
-  return exam.status ? (
-    <TouchableBox onPress={goBack} margin={[0, 0, 0, 10]}>
-      <Typography type="C2">KẾT THÚC</Typography>
+  return exam.status !== 3 ? (
+    <TouchableBox onPress={submit} margin={[0, 0, 0, 10]}>
+      <Typography fontSize={18} fontStyle="bold" color={'#E21B00'}>
+        Kết thúc
+      </Typography>
     </TouchableBox>
   ) : null;
 };
@@ -66,8 +84,16 @@ const ExamScreen = ({ navigation, route }) => {
   const [flatIndex, setFlatIndex] = useState(0);
 
   const headerLeft = useCallback(
-    () => <HeaderLeft time={countDown} idExam={route.params.idExam} />,
-    [countDown, route.params.idExam],
+    () => (
+      <HeaderLeft
+        time={countDown}
+        idExam={route.params.idExam}
+        title={exam?.title}
+        status={exam?.status}
+        total={exam?.total}
+      />
+    ),
+    [countDown, exam, route.params.idExam],
   );
   const headerRight = useCallback(
     () => <HeaderRight idExam={route.params.idExam} />,
@@ -105,31 +131,44 @@ const ExamScreen = ({ navigation, route }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${exam?.title} ( ${convertLongToTime(countDown)} )`,
       headerLeft,
       headerRight,
     });
   }, [countDown, navigation, exam?.title, headerLeft, headerRight]);
 
   return (
-    <Box padding={[0, 10]} background="white">
-      <Box flexDirection="row" margin={[20, 0, 0, 0]} justify="space-between">
+    <Box
+      margin={[0, 16]}
+      padding={[0, 10]}
+      background="white"
+      borderRadius={16}
+    >
+      <Box flexDirection="row" margin={[16, 16]} justify="space-between">
         <TouchableBox onPress={onBack}>
-          <ImageIcon name="chevronLeft" circle={14} />
+          <ImageIcon name="chevronLeftPurple" circle={14} />
         </TouchableBox>
-        <Typography>Câu {flatIndex + 1} / 25</Typography>
+        <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
+          Câu {flatIndex + 1} / 25
+        </Typography>
         <TouchableBox onPress={onNext}>
-          <ImageIcon name="chevronRight" circle={14} />
+          <ImageIcon name="chevronRightPurple" circle={14} />
         </TouchableBox>
       </Box>
-      <Underlined />
+      <Underlined style={styles.underlined} />
       <ItemExam
         item={itemExam}
         flatIndex={flatIndex}
         idExam={route.params.idExam}
+        status={exam?.status}
       />
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  title: { fontWeight: '500' },
+  titleCard: { fontWeight: '600' },
+  underlined: { backgroundColor: '#302EA7' },
+});
 
 export default ExamScreen;

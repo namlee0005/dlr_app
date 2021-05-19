@@ -2,18 +2,15 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Box from '@src/components/Box';
 import FastImage from 'react-native-fast-image';
-import Underlined from '@src/components/Underlined';
 import { v4 as uuid } from 'uuid';
 import realm from '@src/realms/realm';
+import Underlined from '@src/components/Underlined';
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
-
-const ItemExam = ({ item, flatIndex, idExam }) => {
-  const [checkBoxs, setCheckBoxs] = useState([]);
-  // console.log(item, 'item');
+const ItemExam = ({ item, flatIndex, idExam, status }) => {
+  const [checkBox, setCheckBox] = useState([]);
   useEffect(() => {
     //init checkbox
     let array = [];
@@ -28,23 +25,12 @@ const ItemExam = ({ item, flatIndex, idExam }) => {
         array.push({ index: i, isSelected: false });
       }
     }
-    setCheckBoxs(array);
+    setCheckBox(array);
   }, [flatIndex, item]);
-
-  const getBackground = useCallback(
-    (indexAnswer) => {
-      let itemCheckBoxs = checkBoxs.find((e) => e.index === indexAnswer);
-      if (itemCheckBoxs?.isSelected) {
-        return '#3cff00';
-      }
-      return undefined;
-    },
-    [checkBoxs],
-  );
 
   const toggleAnswer = useCallback(
     (indexAnswer) => {
-      let array = [...checkBoxs];
+      let array = [...checkBox];
       array.map((e) => {
         if (e.index === indexAnswer) {
           e.isSelected = true;
@@ -52,7 +38,7 @@ const ItemExam = ({ item, flatIndex, idExam }) => {
           e.isSelected = false;
         }
       });
-      setCheckBoxs(array);
+      setCheckBox(array);
       const exam = realm
         .objects('TopicExam')
         .filtered('id =  ' + idExam)
@@ -61,7 +47,7 @@ const ItemExam = ({ item, flatIndex, idExam }) => {
         exam.questions[flatIndex].selected = indexAnswer + 1;
       });
     },
-    [checkBoxs, flatIndex, idExam],
+    [checkBox, flatIndex, idExam],
   );
 
   const renderAnswer = (answers, number) => {
@@ -70,20 +56,39 @@ const ItemExam = ({ item, flatIndex, idExam }) => {
     } else {
       return (
         <Box key={uuid()}>
-          <Underlined style={styles.answerUnderlined} />
           <TouchableBox
             style={styles.touAnswer}
             onPress={() => toggleAnswer(number)}
           >
             <Box
               style={[
-                styles.answer,
-                { backgroundColor: getBackground(number) },
+                styles.numberAnswer,
+                checkBox.find((e) => e.index === number)?.isSelected
+                  ? styles.numberAnswer1
+                  : null,
               ]}
             >
-              <Typography style={styles.textAnswer}>{number + 1}</Typography>
+              <Typography
+                style={
+                  checkBox.find((e) => e.index === number)?.isSelected
+                    ? styles.textNumberAnswer
+                    : styles.textNumberAnswer1
+                }
+              >
+                {number + 1}
+              </Typography>
             </Box>
-            <Typography>{answers}</Typography>
+            <Box style={styles.answer}>
+              <Typography
+                color={
+                  checkBox.find((e) => e.index === number)?.isSelected
+                    ? '#302EA7'
+                    : '#333333'
+                }
+              >
+                {answers}
+              </Typography>
+            </Box>
           </TouchableBox>
         </Box>
       );
@@ -91,19 +96,35 @@ const ItemExam = ({ item, flatIndex, idExam }) => {
   };
 
   return (
-    <Box width={DEVICE_WIDTH}>
-      <Box>
-        <Typography>{item?.question}</Typography>
-        {item?.image ? (
-          <Box justify="center" align="center">
-            <FastImage source={item?.image} style={styles.image} />
+    <Box margin={[16, 0, 0, 0]}>
+      <Typography>{item?.question}</Typography>
+      {item?.image ? (
+        <Box justify="center" align="center">
+          <FastImage source={item?.image} style={styles.image} />
+        </Box>
+      ) : null}
+      {renderAnswer(item?.answer1, 0)}
+      {renderAnswer(item?.answer2, 1)}
+      {renderAnswer(item?.answer3, 2)}
+      <Box margin={[0, 0, 10, 0]}>{renderAnswer(item?.answer4, 3)}</Box>
+      {status === 3 ? (
+        <Box>
+          <Underlined style={styles.underlined} />
+          <Box style={styles.answer}>
+            <Typography fontSize={16} padding={[8, 0, 0, 0]}>
+              Giải thích đáp án
+            </Typography>
+            <Box
+              background="rgba(48, 46, 167, 0.3)"
+              borderRadius={4}
+              padding={[0, 8]}
+              margin={[8, 0, 8, 0]}
+            >
+              <Typography padding={[8, 0, 8, 0]}>{item?.explain}</Typography>
+            </Box>
           </Box>
-        ) : null}
-        {renderAnswer(item?.answer1, 0)}
-        {renderAnswer(item?.answer2, 1)}
-        {renderAnswer(item?.answer3, 2)}
-        <Box margin={[0, 0, 10, 0]}>{renderAnswer(item?.answer4, 3)}</Box>
-      </Box>
+        </Box>
+      ) : null}
     </Box>
   );
 };
@@ -112,17 +133,21 @@ export default ItemExam;
 
 const styles = StyleSheet.create({
   answerUnderlined: { opacity: 0.2, height: 0.5, marginTop: 10 },
-  touAnswer: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
-  answer: {
-    borderRadius: 30 / 2,
-    width: 30,
-    height: 30,
+  touAnswer: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
+  numberAnswer: {
+    borderRadius: 24 / 2,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    borderColor: '#4F4F4F',
+    borderWidth: 1,
     marginRight: 10,
   },
-  textAnswer: { fontSize: 16, color: '#3f403e' },
+  numberAnswer1: { backgroundColor: '#302EA7', borderWidth: 0 },
+  textNumberAnswer: { fontSize: 16, color: '#FFFFFF' },
+  textNumberAnswer1: { fontSize: 16, color: '#4F4F4F' },
   image: { height: 100, width: 100, marginTop: 10 },
+  answer: { flexShrink: 1 },
+  underlined: { backgroundColor: '#302EA7' },
 });
