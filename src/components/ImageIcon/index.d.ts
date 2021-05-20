@@ -22,6 +22,7 @@ interface ImageIconProps extends ImageProps {
     | 'eLearning'
     | 'email'
     | 'menu'
+    | 'menuAnswer'
     | 'random'
     | 'rating'
     | 'rightArrow'

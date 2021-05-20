@@ -50,6 +50,49 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
     [checkBox, flatIndex, idExam],
   );
 
+  const getColorAnswer = useCallback(
+    (number) => {
+      if (status === 3) {
+        if (item?.selected === -1 && number + 1 === item?.correctAnswer) {
+          return '#302EA7';
+        }
+        if (number + 1 === item?.selected) {
+          if (item?.selected === item?.correctAnswer) {
+            return '#302EA7';
+          } else {
+            return '#E21B00';
+          }
+        }
+        return '#4F4F4F';
+      }
+      if (checkBox.find((e) => e.index === number)?.isSelected) {
+        return '#302EA7';
+      }
+      return '#4F4F4F';
+    },
+    [checkBox, item?.correctAnswer, item?.selected, status],
+  );
+
+  const getColorNumberAnswer = useCallback(
+    (number) => {
+      if (status === 3) {
+        if (number + 1 === item?.selected) {
+          if (item?.selected === item?.correctAnswer) {
+            return styles.numberAnswerSelected;
+          } else {
+            return styles.numberAnswerFail;
+          }
+        }
+        return null;
+      }
+      if (checkBox.find((e) => e.index === number)?.isSelected) {
+        return styles.numberAnswerSelected;
+      }
+      return null;
+    },
+    [checkBox, item?.correctAnswer, item?.selected, status],
+  );
+
   const renderAnswer = (answers, number) => {
     if (answers == null) {
       return null;
@@ -59,15 +102,9 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
           <TouchableBox
             style={styles.touAnswer}
             onPress={() => toggleAnswer(number)}
+            disabled={status === 3}
           >
-            <Box
-              style={[
-                styles.numberAnswer,
-                checkBox.find((e) => e.index === number)?.isSelected
-                  ? styles.numberAnswer1
-                  : null,
-              ]}
-            >
+            <Box style={[styles.numberAnswer, getColorNumberAnswer(number)]}>
               <Typography
                 style={
                   checkBox.find((e) => e.index === number)?.isSelected
@@ -79,14 +116,8 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
               </Typography>
             </Box>
             <Box style={styles.answer}>
-              <Typography
-                color={
-                  checkBox.find((e) => e.index === number)?.isSelected
-                    ? '#302EA7'
-                    : '#333333'
-                }
-              >
-                {answers}
+              <Typography color={getColorAnswer(number)}>
+                {answers.trim()}
               </Typography>
             </Box>
           </TouchableBox>
@@ -97,7 +128,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
 
   return (
     <Box margin={[16, 0, 0, 0]}>
-      <Typography>{item?.question}</Typography>
+      <Typography>{item?.question.trim()}</Typography>
       {item?.image ? (
         <Box justify="center" align="center">
           <FastImage source={item?.image} style={styles.image} />
@@ -144,7 +175,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 10,
   },
-  numberAnswer1: { backgroundColor: '#302EA7', borderWidth: 0 },
+  numberAnswerSelected: { backgroundColor: '#302EA7', borderWidth: 0 },
+  numberAnswerFail: { backgroundColor: '#E21B00', borderWidth: 0 },
   textNumberAnswer: { fontSize: 16, color: '#FFFFFF' },
   textNumberAnswer1: { fontSize: 16, color: '#4F4F4F' },
   image: { height: 100, width: 100, marginTop: 10 },

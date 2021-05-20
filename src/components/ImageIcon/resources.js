@@ -17,6 +17,7 @@ const resources = {
   eLearning: require('./resources/eLearning.png'),
   email: require('./resources/email.png'),
   menu: require('./resources/menu.png'),
+  menuAnswer: require('./resources/menuAnswer.png'),
   random: require('./resources/random.png'),
   rating: require('./resources/rating.png'),
   rightArrow: require('./resources/rightArrow.png'),
