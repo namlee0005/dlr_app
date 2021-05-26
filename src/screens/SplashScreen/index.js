@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRequest } from '@umijs/hooks';
 import { getAllA1 } from './services';
-import { Alert, ActivityIndicator } from 'react-native';
-import { createA1Exam } from '@src/utils/handleA1Exam';
+import { Alert, ActivityIndicator, StyleSheet } from 'react-native';
+import { createA1Exam, createTheoretical } from '@src/utils/handleA1Exam';
 import realm from '@src/realms/realm';
 const SplashScreen = ({ navigation }) => {
   const { run } = useRequest(getAllA1, {
@@ -21,14 +21,21 @@ const SplashScreen = ({ navigation }) => {
         for (let i = 0; i < 6; i++) {
           topicExam.push(createA1Exam(i + 1, realm));
         }
+        let theoretical = createTheoretical(realm);
+
         realm.write(() => {
           realm.delete(realm.objects('TopicExam'));
           topicExam?.map((item) => {
             realm.create('TopicExam', item);
           });
+          realm.delete(realm.objects('Theoretical'));
+          theoretical?.map((item) => {
+            realm.create('Theoretical', item);
+          });
         });
       } catch (e) {
-        realm.close();
+        Alert.alert('Thông báo', 'Có lỗi xảy ra vui lòng thử lại sau!');
+        // realm.close();
       }
     },
     onError: (error) => {
@@ -51,7 +58,13 @@ const SplashScreen = ({ navigation }) => {
     getIsData();
   }, [navigation, run]);
 
-  return <ActivityIndicator size="large" style={{ flex: 1 }} color="#ddd" />;
+  return (
+    <ActivityIndicator size="large" style={styles.container} color="#ddd" />
+  );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+});
 
 export default SplashScreen;

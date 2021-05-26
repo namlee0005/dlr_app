@@ -68,7 +68,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
       if (checkBox.find((e) => e.index === number)?.isSelected) {
         return '#302EA7';
       }
-      return '#4F4F4F';
+      return '#000000';
     },
     [checkBox, item?.correctAnswer, item?.selected, status],
   );

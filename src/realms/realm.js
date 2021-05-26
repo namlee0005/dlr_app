@@ -56,6 +56,43 @@ const Questions = {
   },
 };
 
+const Theoretical = {
+  name: 'Theoretical',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    question: 'string',
+    explain: 'string?',
+    correctAnswer: 'int',
+    answer1: 'string?',
+    answer2: 'string?',
+    answer3: 'string?',
+    answer4: 'string?',
+    type: 'int?',
+    urlImage: 'string?',
+    isSentenceParalysis: 'int?',
+    selected: 'int?',
+  },
+};
+
+export const objectTheoretical = (realmObject, type) => {
+  return {
+    id: uuid(),
+    question: realmObject?.question ? realmObject?.question : null,
+    explain: realmObject?.explain ? realmObject?.explain : null,
+    correctAnswer: realmObject?.correctAnswer
+      ? realmObject?.correctAnswer
+      : null,
+    answer1: realmObject?.answer1 ? realmObject?.answer1 : null,
+    answer2: realmObject?.answer2 ? realmObject?.answer2 : null,
+    answer3: realmObject?.answer3 ? realmObject?.answer3 : null,
+    answer4: realmObject?.answer4 ? realmObject?.answer4 : null,
+    type: type || realmObject?.type,
+    urlImage: realmObject?.urlImage ? realmObject?.urlImage : null,
+    selected: -1,
+  };
+};
+
 export const objectQuestions = (realmObject) => {
   return {
     id: uuid(),
@@ -77,5 +114,5 @@ export const objectQuestions = (realmObject) => {
 };
 
 export default new Realm({
-  schema: [ExamA1, TopicExam, Questions],
+  schema: [ExamA1, TopicExam, Questions, Theoretical],
 });

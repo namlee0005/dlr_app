@@ -1,4 +1,4 @@
-import { objectQuestions } from '@src/realms/realm';
+import { objectQuestions, objectTheoretical } from '@src/realms/realm';
 
 const randomItem = (items) => {
   return items[Math.floor(Math.random() * items?.length)];
@@ -76,6 +76,33 @@ export const createA1Exam = (id, realm) => {
     topicExam.questions = arr1;
     return topicExam;
   } catch (error) {
+    return false;
+  }
+};
+
+export const createTheoretical = (realm) => {
+  if (!realm) {
+    return false;
+  }
+  try {
+    let examA1 = realm?.objects('ExamA1').map((i) => i);
+    let arrSentenceParalysis = examA1
+      ?.map((i) => i)
+      .filter((e) => e.isSentenceParalysis === 1);
+    const arrTheoretical = [];
+
+    for (let i = 0; i < arrSentenceParalysis.length; i++) {
+      let temp = arrSentenceParalysis[i];
+      arrTheoretical.push(objectTheoretical(temp, 2));
+    }
+
+    for (let j = 0; j < examA1.length; j++) {
+      let temp = examA1[j];
+      arrTheoretical.push(objectTheoretical(temp));
+    }
+    return arrTheoretical;
+  } catch (error) {
+    // console.log(error);
     return false;
   }
 };

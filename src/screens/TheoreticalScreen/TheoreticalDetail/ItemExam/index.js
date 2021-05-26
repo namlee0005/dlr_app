@@ -1,35 +1,22 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Box from '@src/components/Box';
 import FastImage from 'react-native-fast-image';
+import { v4 as uuid } from 'uuid';
+import realm from '@src/realms/realm';
 import Underlined from '@src/components/Underlined';
-import * as Store from '@src/store';
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
-
-const ItemExam = ({
-  item,
-  index,
-  flatIndex,
-  exam,
-  arrayHeight,
-  setArrayHeight,
-}) => {
-  const [checkBoxs, setCheckBoxs] = useState([]);
-  const { dispatch } = useContext(Store.StoreContext);
+const ItemExam = ({ item, flatIndex, idExam, status }) => {
+  const [checkBox, setCheckBox] = useState([]);
   useEffect(() => {
     //init checkbox
-    let length = exam?.questions[flatIndex]?.answer.length;
-    if (!length) {
-      return;
-    }
     let array = [];
-    for (let i = 0; i < length; i++) {
-      if (exam?.questions[flatIndex]?.selected !== undefined) {
-        if (i === exam?.questions[flatIndex]?.selected) {
+    for (let i = 0; i < 4; i++) {
+      if (item?.selected !== undefined) {
+        if (i === item?.selected - 1) {
           array.push({ index: i, isSelected: true });
         } else {
           array.push({ index: i, isSelected: false });
@@ -38,35 +25,12 @@ const ItemExam = ({
         array.push({ index: i, isSelected: false });
       }
     }
-    setCheckBoxs(array);
-  }, [flatIndex, exam?.questions]);
-
-  const _onLayout = (event) => {
-    var { height } = event.nativeEvent.layout;
-    let array = [...arrayHeight];
-    array.push({ index, height });
-    setArrayHeight(array);
-  };
-
-  const getHeight = () => {
-    let itemHeight = arrayHeight.find((e) => e.index === flatIndex);
-    return itemHeight?.height;
-  };
-
-  const getBackground = useCallback(
-    (indexAnswer) => {
-      let itemCheckBoxs = checkBoxs.find((e) => e.index === indexAnswer);
-      if (itemCheckBoxs?.isSelected) {
-        return '#3cff00';
-      }
-      return undefined;
-    },
-    [checkBoxs],
-  );
+    setCheckBox(array);
+  }, [flatIndex, item]);
 
   const toggleAnswer = useCallback(
     (indexAnswer) => {
-      let array = [...checkBoxs];
+      let array = [...checkBox];
       array.map((e) => {
         if (e.index === indexAnswer) {
           e.isSelected = true;
@@ -74,54 +38,108 @@ const ItemExam = ({
           e.isSelected = false;
         }
       });
-      setCheckBoxs(array);
-      dispatch({
-        type: 'UPDATE_RESULT',
-        payload: {
-          indexAnswer,
-          flatIndex,
-          exam,
-        },
+      setCheckBox(array);
+      const exam = realm
+        .objects('Theoretical')
+        .map((i) => i)
+        .filter((i) => i.id === item?.id)[0];
+      realm.write(() => {
+        exam.selected = indexAnswer + 1;
       });
     },
-    [checkBoxs, dispatch, flatIndex, exam],
+    [checkBox, item?.id],
   );
 
-  const renderAnswer = (answers) => {
-    return answers.map((e) => {
+  const getColorAnswer = useCallback(
+    (number) => {
+      if (checkBox.find((e) => e.index === number)?.isSelected) {
+        if (number + 1 === item?.correctAnswer) {
+          return '#302EA7';
+        } else {
+          return '#E21B00';
+        }
+      }
+      return '#000000';
+    },
+    [checkBox, item?.correctAnswer],
+  );
+
+  const getColorNumberAnswer = useCallback(
+    (number) => {
+      if (checkBox.find((e) => e.index === number)?.isSelected) {
+        if (number + 1 === item?.correctAnswer) {
+          return styles.numberAnswerSelected;
+        } else {
+          return styles.numberAnswerFail;
+        }
+      }
+      return null;
+    },
+    [checkBox, item?.correctAnswer],
+  );
+
+  const renderAnswer = (answers, number) => {
+    if (answers == null) {
+      return null;
+    } else {
       return (
-        <Box key={e.stt.toString()}>
-          <Underlined style={styles.answerUnderlined} />
+        <Box key={uuid()}>
           <TouchableBox
             style={styles.touAnswer}
-            onPress={() => toggleAnswer(e.stt - 1)}
+            onPress={() => toggleAnswer(number)}
           >
-            <Box
-              style={[
-                styles.answer,
-                { backgroundColor: getBackground(e.stt - 1) },
-              ]}
-            >
-              <Typography style={styles.textAnswer}>{e.stt}</Typography>
+            <Box style={[styles.numberAnswer, getColorNumberAnswer(number)]}>
+              <Typography
+                style={
+                  checkBox.find((e) => e.index === number)?.isSelected
+                    ? styles.textNumberAnswer
+                    : styles.textNumberAnswer1
+                }
+              >
+                {number + 1}
+              </Typography>
             </Box>
-            <Typography>{e.content}</Typography>
+            <Box style={styles.answer}>
+              <Typography color={getColorAnswer(number)}>
+                {answers.trim()}
+              </Typography>
+            </Box>
           </TouchableBox>
         </Box>
       );
-    });
+    }
   };
 
   return (
-    <Box width={DEVICE_WIDTH} height={getHeight()}>
-      <Box onLayout={_onLayout}>
-        <Typography>{item.quest}</Typography>
-        {item.image ? (
-          <Box justify="center" align="center">
-            <FastImage source={item.image} style={styles.image} />
+    <Box margin={[16, 0, 0, 0]}>
+      <Typography>{item?.question.trim()}</Typography>
+      {item?.image ? (
+        <Box justify="center" align="center">
+          <FastImage source={item?.image} style={styles.image} />
+        </Box>
+      ) : null}
+      {renderAnswer(item?.answer1, 0)}
+      {renderAnswer(item?.answer2, 1)}
+      {renderAnswer(item?.answer3, 2)}
+      <Box margin={[0, 0, 10, 0]}>{renderAnswer(item?.answer4, 3)}</Box>
+      {item?.selected === item?.correctAnswer ? (
+        <Box>
+          <Underlined style={styles.underlined} />
+          <Box style={styles.answer}>
+            <Typography fontSize={16} padding={[8, 0, 0, 0]}>
+              Giải thích đáp án
+            </Typography>
+            <Box
+              background="rgba(48, 46, 167, 0.3)"
+              borderRadius={4}
+              padding={[0, 8]}
+              margin={[8, 0, 8, 0]}
+            >
+              <Typography padding={[8, 0, 8, 0]}>{item?.explain}</Typography>
+            </Box>
           </Box>
-        ) : null}
-        {renderAnswer(item.answer)}
-      </Box>
+        </Box>
+      ) : null}
     </Box>
   );
 };
@@ -130,17 +148,22 @@ export default ItemExam;
 
 const styles = StyleSheet.create({
   answerUnderlined: { opacity: 0.2, height: 0.5, marginTop: 10 },
-  touAnswer: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
-  answer: {
-    borderRadius: 30 / 2,
-    width: 30,
-    height: 30,
+  touAnswer: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
+  numberAnswer: {
+    borderRadius: 24 / 2,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    borderColor: '#4F4F4F',
+    borderWidth: 1,
     marginRight: 10,
   },
-  textAnswer: { fontSize: 16, color: '#3f403e' },
+  numberAnswerSelected: { backgroundColor: '#302EA7', borderWidth: 0 },
+  numberAnswerFail: { backgroundColor: '#E21B00', borderWidth: 0 },
+  textNumberAnswer: { fontSize: 16, color: '#FFFFFF' },
+  textNumberAnswer1: { fontSize: 16, color: '#4F4F4F' },
   image: { height: 100, width: 100, marginTop: 10 },
+  answer: { flexShrink: 1 },
+  underlined: { backgroundColor: '#302EA7' },
 });

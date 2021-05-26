@@ -1,103 +1,72 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import { StyleSheet, FlatList, Dimensions } from 'react-native';
 import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
+import realm from '@src/realms/realm';
 
 const TARBAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10;
 
 const data = [
   {
-    id: 1,
+    id: 2,
     title: '20 CÂU HỎI ĐIỂM LIỆT',
     content: '20 câu hỏi điểm liệt',
     image: 'warning',
-    total: 20,
-    index: 10,
-    questions: [
-      {
-        quest: 'Cau hoi 1',
-        answer: [
-          { stt: 1, content: 'Dap an A' },
-          { stt: 2, content: 'Dap an B' },
-          { stt: 3, content: 'Dap an C' },
-          { stt: 4, content: 'Dap an D' },
-        ],
-        explain: 'ExamScreen.js',
-        correct: 1,
-        image: 'book',
-        selected: 2,
-      },
-      {
-        quest: 'Cau hoi 2',
-        answer: [
-          { stt: 1, content: 'Dap an A' },
-          { stt: 2, content: 'Dap an B' },
-          { stt: 3, content: 'Dap an C' },
-        ],
-        explain: 'ExamScreen.js',
-        correct: 1,
-      },
-      {
-        quest: 'Cau hoi 3',
-        answer: [
-          { stt: 1, content: 'Dap an A' },
-          { stt: 2, content: 'Dap an B' },
-        ],
-        explain: 'ExamScreen.js',
-        correct: 1,
-        selected: 1,
-      },
-    ],
   },
   {
-    id: 2,
+    id: 1,
     title: 'KHÁI NIỆM VÀ QUY TẮC',
     content: 'Gồm 83 câu hỏi',
     content1: '(18 điểm liệt)',
     image: 'checklist',
-    total: 83,
-    index: 25,
   },
   {
     id: 3,
     title: 'VĂN HOÁ VÀ ĐẠO ĐỨC LÁI XE',
     content: 'Gồm 5 câu hỏi',
     image: 'talk',
-    total: 5,
-    index: 4,
   },
   {
     id: 4,
     title: 'KỸ THUẬT LÁI XE',
     content: 'Gồm 12 câu hỏi',
     image: 'driver',
-    total: 12,
-    index: 12,
   },
   {
     id: 5,
     title: 'BIỂN BÁO ĐƯỜNG BỘ',
     content: 'Gồm 65 câu hỏi',
     image: 'directionBoard',
-    total: 65,
-    index: 65,
   },
   {
     id: 6,
     title: 'SA HÌNH',
     content: 'Gồm 35 câu hỏi',
     image: 'carWifi',
-    total: 35,
-    index: 0,
   },
 ];
 
-const Item = ({ item, navigation }) => {
+const Item = ({ item, navigation, examTheoretical }) => {
   const onItemPress = useCallback(() => {
-    navigation.navigate('TheoreticalDetail');
-  }, [navigation]);
+    navigation.navigate('TheoreticalDetail', {
+      id: item?.id,
+      title: item?.title,
+    });
+  }, [item, navigation]);
+
+  const getIndex = useCallback(() => {
+    let arr = examTheoretical
+      .map((i) => i)
+      .filter((i) => i.type === item?.id && i.selected !== -1);
+    return arr.length;
+  }, [examTheoretical, item?.id]);
+
+  const getTotal = useCallback(() => {
+    let arr = examTheoretical.map((i) => i).filter((i) => i.type === item?.id);
+    return arr.length;
+  }, [examTheoretical, item?.id]);
 
   const getColor = useCallback(() => {
     if (item.id === 1) {
@@ -150,7 +119,7 @@ const Item = ({ item, navigation }) => {
           >
             <Box
               height={4}
-              width={(TARBAR_WIDTH / item.total) * item.index}
+              width={(TARBAR_WIDTH / getTotal()) * getIndex()}
               background="green"
               borderRadius={2}
             />
@@ -162,7 +131,7 @@ const Item = ({ item, navigation }) => {
         <Typography margin={[0, 0, 4, 0]} />
         <Typography fontSize={12} color="gray" margin={[0, 0, 4, 0]} />
         <Typography margin={[12, 12, 0, 0]}>
-          {item.index} / {item.total}
+          {getIndex()} / {getTotal()}
         </Typography>
       </Box>
     </TouchableBox>
@@ -170,11 +139,18 @@ const Item = ({ item, navigation }) => {
 };
 
 const TheoreticalScreen = ({ navigation }) => {
+  const [examTheoretical] = useState(realm.objects('Theoretical'));
   const renderItem = useCallback(
     ({ item }) => {
-      return <Item item={item} navigation={navigation} />;
+      return (
+        <Item
+          item={item}
+          navigation={navigation}
+          examTheoretical={examTheoretical}
+        />
+      );
     },
-    [navigation],
+    [navigation, examTheoretical],
   );
 
   return (
@@ -184,6 +160,7 @@ const TheoreticalScreen = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         style={styles.contentContainerStyle}
+        extraData={examTheoretical}
       />
     </Box>
   );

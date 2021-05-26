@@ -77,14 +77,7 @@ const HomeStack = () => {
           headerLeft,
         }}
       />
-      <Stack.Screen
-        name="TheoreticalDetail"
-        component={TheoreticalDetail}
-        options={{
-          title: 'Học lý thuyết',
-          headerLeft,
-        }}
-      />
+      <Stack.Screen name="TheoreticalDetail" component={TheoreticalDetail} />
     </Stack.Navigator>
   );
 };

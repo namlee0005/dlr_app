@@ -1,104 +1,257 @@
-import React, { useCallback, useState, createRef } from 'react';
+import React, { useCallback, useState, useLayoutEffect } from 'react';
 import Box from '@src/components/Box';
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
 import ImageIcon from '@src/components/ImageIcon';
 import Underlined from '@src/components/Underlined';
-import { FlatList, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
 import ItemExam from './ItemExam';
+import realm from '@src/realms/realm';
+import { useNavigation } from '@react-navigation/native';
+import { v4 as uuid } from 'uuid';
+
+const HEIGHT = Dimensions.get('window').height;
+
+const HeaderLeft = ({ title }) => {
+  const navigation = useNavigation();
+  const goBack = useCallback(() => {
+    navigation.pop();
+  }, [navigation]);
+
+  return (
+    <TouchableBox
+      flexDirection="row"
+      margin={[0, 16, 0, 0]}
+      onPress={goBack}
+      justify="center"
+      align="center"
+    >
+      <ImageIcon name="backArrow" square={24} />
+      <Typography padding={[0, 10, 0, 0]} fontSize={18} style={styles.title}>
+        {title}
+      </Typography>
+    </TouchableBox>
+  );
+};
+
+const HeaderRight = ({ visibleMenuAnswer, setVisibleMenuAnswer }) => {
+  const onClickMenu = useCallback(() => {
+    setVisibleMenuAnswer(!visibleMenuAnswer);
+  }, [setVisibleMenuAnswer, visibleMenuAnswer]);
+
+  return (
+    <TouchableBox margin={[0, 0, 0, 16]} onPress={onClickMenu}>
+      <ImageIcon name="menuAnswer" square={24} />
+    </TouchableBox>
+  );
+};
 
 const TheoreticalDetail = ({ navigation, route }) => {
-  const { exam } = route.params;
-  const myFlatList = createRef();
+  const [examTheoretical] = useState(
+    realm
+      .objects('Theoretical')
+      .map((i) => i)
+      .filter((i) => i.type === route.params.id),
+  );
+
+  const [itemExam, setItemExam] = useState(examTheoretical[0]);
   const [flatIndex, setFlatIndex] = useState(0);
-  const [arrayHeight, setArrayHeight] = useState([]);
+  const [visibleMenuAnswer, setVisibleMenuAnswer] = useState(false);
+
+  // console.log(itemExam, 'itemExam');
+
+  const headerLeft = useCallback(
+    () => <HeaderLeft title={route?.params?.title} />,
+    [route.params?.title],
+  );
+
+  const headerRight = useCallback(
+    () => (
+      <HeaderRight
+        setVisibleMenuAnswer={setVisibleMenuAnswer}
+        visibleMenuAnswer={visibleMenuAnswer}
+      />
+    ),
+    [visibleMenuAnswer, setVisibleMenuAnswer],
+  );
 
   const onNext = useCallback(() => {
-    if (exam.questions.length - 1 === flatIndex) {
+    if (examTheoretical.length - 1 === flatIndex) {
       return;
     }
-    myFlatList.current.scrollToIndex({
-      index: flatIndex + 1,
-      animated: true,
-    });
     setFlatIndex(flatIndex + 1);
-  }, [flatIndex, myFlatList, exam.questions]);
+    setItemExam(examTheoretical[flatIndex + 1]);
+  }, [examTheoretical, flatIndex]);
 
   const onBack = useCallback(() => {
     if (flatIndex === 0) {
       return;
     }
-    myFlatList.current.scrollToIndex({
-      index: flatIndex - 1,
-      animated: true,
-    });
     setFlatIndex(flatIndex - 1);
-  }, [flatIndex, myFlatList]);
+    setItemExam(examTheoretical[flatIndex - 1]);
+  }, [examTheoretical, flatIndex]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft,
+      title: null,
+      headerRight,
+    });
+  }, [navigation, headerLeft, headerRight]);
 
   const renderItem = useCallback(
     ({ item, index }) => {
+      const onPress = (nextIndex) => {
+        setFlatIndex(nextIndex);
+        setItemExam(examTheoretical[nextIndex]);
+      };
       return (
-        <ItemExam
-          item={item}
-          navigation={navigation}
-          flatIndex={flatIndex}
-          index={index}
-          exam={exam}
-          arrayHeight={arrayHeight}
-          setArrayHeight={setArrayHeight}
-        />
+        <Box flex={0.5} align="center" justify="center" margin={[0, 0, 8, 0]}>
+          <TouchableBox
+            style={[
+              styles.numberAnswer,
+              styles.answerSelected(index === flatIndex),
+            ]}
+            background={item?.isSentenceParalysis === 0 ? '#e3e3e3' : '#FFEC3E'}
+            onPress={() => onPress(index)}
+          >
+            <Typography fontSize={12}>{index + 1}</Typography>
+          </TouchableBox>
+          {item?.selected !== -1 && (
+            <TouchableBox
+              style={styles.boxAnswer}
+              onPress={() => onPress(index)}
+              activeOpacity={1}
+            >
+              <Box style={styles.numberAnswer1(item)}>
+                <Typography style={styles.textNumber()}>
+                  {item?.selected}
+                </Typography>
+              </Box>
+            </TouchableBox>
+          )}
+        </Box>
       );
     },
-    [navigation, flatIndex, exam, arrayHeight],
+    [examTheoretical, flatIndex],
   );
+
+  const onClickMenu = useCallback(() => {
+    setVisibleMenuAnswer(!visibleMenuAnswer);
+  }, [setVisibleMenuAnswer, visibleMenuAnswer]);
+
   return (
-    <Box padding={[0, 10]} background="white">
-      <Box flexDirection="row" margin={[20, 0, 0, 0]} justify="space-between">
-        <TouchableBox onPress={onBack}>
-          <ImageIcon name="chevronLeft" circle={14} />
-        </TouchableBox>
-        <Typography>Câu {flatIndex + 1} / 25</Typography>
-        <TouchableBox onPress={onNext}>
-          <ImageIcon name="chevronRight" circle={14} />
-        </TouchableBox>
+    <Box flex={1}>
+      <Box
+        margin={[0, 16]}
+        padding={[0, 10]}
+        background="white"
+        borderRadius={16}
+      >
+        <Box flexDirection="row" margin={[16, 16]} justify="space-between">
+          <TouchableBox onPress={onBack}>
+            <ImageIcon name="chevronLeftPurple" circle={14} />
+          </TouchableBox>
+          <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
+            Câu {flatIndex + 1} / 25
+          </Typography>
+          <TouchableBox onPress={onNext}>
+            <ImageIcon name="chevronRightPurple" circle={14} />
+          </TouchableBox>
+        </Box>
+        <Underlined style={styles.underlined} />
+        <ItemExam item={itemExam} flatIndex={flatIndex} />
       </Box>
-      <Underlined />
-      <FlatList
-        horizontal
-        ref={myFlatList}
-        data={exam.questions}
-        renderItem={renderItem}
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-        style={styles.flatList}
-        keyExtractor={(item, index) =>
-          (exam.questions.length + index).toString()
-        }
-      />
+      {visibleMenuAnswer && (
+        <TouchableWithoutFeedback onPress={onClickMenu}>
+          <Box flex={1} style={styles.boxMenu}>
+            <TouchableBox disabled={false} activeOpacity={1}>
+              <Box
+                width={80}
+                background="rgba(196, 196, 196, 0.8)"
+                padding={[8, 4]}
+                borderRadius={[12, 0]}
+              >
+                <FlatList
+                  data={examTheoretical}
+                  renderItem={renderItem}
+                  numColumns={2}
+                  keyExtractor={() => uuid()}
+                  extraData={examTheoretical}
+                />
+              </Box>
+            </TouchableBox>
+          </Box>
+        </TouchableWithoutFeedback>
+      )}
     </Box>
   );
 };
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    backgroundColor: '#efeff5',
+  title: { fontWeight: '500' },
+  titleCard: { fontWeight: '600' },
+  underlined: { backgroundColor: '#302EA7' },
+  boxMenu: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    height: HEIGHT / 2,
   },
-  flatList: { flexGrow: 1, margin: 10 },
-  answerUnderlined: { opacity: 0.2, height: 0.5, marginTop: 10 },
-  touAnswer: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
-  answer: {
+  boxAnswer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  numberAnswer: {
     borderRadius: 30 / 2,
     width: 30,
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    marginRight: 10,
+    borderColor: '#4F4F4F',
   },
-  textAnswer: { fontSize: 16, color: '#3f403e' },
-  image: { height: 100, width: 100, marginTop: 10 },
+  numberAnswer1: (item, status) => {
+    return {
+      borderRadius: 14 / 2,
+      width: 14,
+      height: 14,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor:
+        status === 3
+          ? item?.selected === item?.correctAnswer
+            ? '#302EA7'
+            : '#E21B00'
+          : '#e3e3e3',
+      borderColor: status === 3 ? '#ffffff' : '#57db04',
+      borderWidth: 1,
+    };
+  },
+  answerSelected: (isSelected) => {
+    if (isSelected) {
+      return {
+        borderWidth: 3,
+        borderColor: '#57db04',
+      };
+    }
+  },
+  textNumber: (status) => {
+    return {
+      fontWeight: '300',
+      fontSize: 9,
+      color: status === 3 ? '#ffffff' : null,
+    };
+  },
 });
+
 export default TheoreticalDetail;
