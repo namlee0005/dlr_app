@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { StyleSheet, FlatList, Dimensions } from 'react-native';
+import React, { useContext, useCallback, useLayoutEffect } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
 import { StoreContext } from '@src/store';
 import ImageIcon from '@src/components/ImageIcon';
 import Box from '@src/components/Box';
@@ -7,8 +7,6 @@ import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
 import colors from '@src/utils/colors';
 import realm from '@src/realms/realm';
-
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const ItemHome = ({ item, navigation, length }) => {
   const onItemPress = useCallback(
@@ -27,20 +25,30 @@ const ItemHome = ({ item, navigation, length }) => {
 
   return (
     <TouchableBox
-      flex={0.3}
       onPress={() => onItemPress(item)}
       borderRadius={20}
       background={'white'}
       margin={[0, 0, 20, 0]}
     >
-      <Box margin={[10, 10]} height={DEVICE_HEIGHT / 5}>
-        <Box align="center">
-          <ImageIcon name={item.image} style={styles.icon} />
+      <Box
+        padding={[16, 16]}
+        flexDirection="row"
+        align="center"
+        justify="space-between"
+      >
+        <Box flexDirection="row" align="center">
+          <ImageIcon name={item.image} style={styles.icon} square={56} />
+          <Box justify="center" margin={[0, 16, 0, 0]}>
+            <Typography fontSize={16} fontStyle="bold">
+              {item.title}
+            </Typography>
+            <Typography color={colors.gray} margin={[4, 0, 0, 0]}>
+              {item.id === 1 ? `${length} đề thi` : item.content}
+            </Typography>
+          </Box>
         </Box>
-        <Typography>{item.title}</Typography>
-        <Typography color={colors.gray} margin={[10, 0, 0, 0]}>
-          {item.id === 1 ? `${length} đề thi` : item.content}
-        </Typography>
+
+        <ImageIcon name="chevronRight" square={18} />
       </Box>
     </TouchableBox>
   );
@@ -61,25 +69,47 @@ const HomeScreen = ({ navigation }) => {
     [navigation],
   );
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: null,
+      headerLeft: null,
+      title: null,
+    });
+  }, [navigation]);
+
+  const toggleDrawer = useCallback(() => {
+    navigation.openDrawer();
+  }, [navigation]);
+
   return (
-    <Box flex={1} padding={[0, 15]}>
-      <Box margin={[10, 0]}>
-        <Typography>
+    <Box flex={1}>
+      <Box background="#302EA7" borderRadius={[0, 0, 24, 24]} padding={[0, 16]}>
+        <TouchableBox
+          margin={[46, 0, 0, 0]}
+          style={styles.button}
+          onPress={toggleDrawer}
+        >
+          <ImageIcon name="menu" width={24} height={24} />
+        </TouchableBox>
+        <Box margin={[10, 0]}>
+          <Typography color="white" fontSize={20} fontStyle="bold">
+            Ôn thi GPLX A1
+          </Typography>
+        </Box>
+
+        <Typography color="white" padding={[0, 0, 10, 0]}>
           Xe không có thắng - chạy thẳng vào hòm. Xe không có thắng - chạy thẳng
           vào hòm.
         </Typography>
       </Box>
-      <FlatList
-        data={state?.cardHome}
-        horizontal={false}
-        columnWrapperStyle={styles.row}
-        numColumns={3}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.contentContainerStyle}
-        scrollEnabled={false}
-      />
-      {/* quang cao     */}
+      <Box flex={1} padding={[16, 16, 0, 16]}>
+        <FlatList
+          data={state?.cardHome}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+        {/* quang cao     */}
+      </Box>
     </Box>
   );
 };
@@ -91,6 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  icon: { height: 50, width: 50, marginBottom: 10 },
-  contentContainerStyle: { flexGrow: 0 },
+  icon: { height: 50, width: 50 },
+  button: { width: 24 },
 });

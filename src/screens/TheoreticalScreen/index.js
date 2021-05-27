@@ -1,4 +1,9 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import { FlatList, Dimensions } from 'react-native';
@@ -138,10 +143,34 @@ const Item = ({ item, navigation, examTheoretical }) => {
   );
 };
 
+const HeaderRight = () => {
+  const onReset = useCallback(() => {
+    realm.objects('Theoretical').map((i) => {
+      realm.write(() => {
+        i.selected = -1;
+      });
+    });
+  }, []);
+
+  return (
+    <TouchableBox margin={[0, 0, 0, 16]} onPress={onReset}>
+      <ImageIcon name="sync" square={24} />
+    </TouchableBox>
+  );
+};
+
 const TheoreticalScreen = ({ navigation }) => {
   const [examTheoretical, setExamTheoretical] = useState(
     realm.objects('Theoretical'),
   );
+
+  const headerRight = useCallback(() => <HeaderRight />, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight,
+    });
+  }, [navigation, headerRight]);
 
   useEffect(() => {
     realm.addListener('change', () => {

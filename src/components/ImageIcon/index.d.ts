@@ -5,6 +5,7 @@ interface ImageIconProps extends ImageProps {
   circle: number;
   name:
     | 'backArrow'
+    | 'background'
     | 'book'
     | 'brain'
     | 'carWifi'
@@ -28,7 +29,9 @@ interface ImageIconProps extends ImageProps {
     | 'rightArrow'
     | 'scale'
     | 'share'
+    | 'sync'
     | 'talk'
+    | 'task'
     | 'trafficLights'
     | 'trash'
     | 'vote'

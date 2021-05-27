@@ -1,5 +1,6 @@
 const resources = {
   backArrow: require('./resources/backArrow.png'),
+  background: require('./resources/background.png'),
   book: require('./resources/book.png'),
   brain: require('./resources/brain.png'),
   carWifi: require('./resources/carWifi.png'),
@@ -23,7 +24,9 @@ const resources = {
   rightArrow: require('./resources/rightArrow.png'),
   scale: require('./resources/scale.png'),
   share: require('./resources/share.png'),
+  sync: require('./resources/sync.png'),
   talk: require('./resources/talk.png'),
+  task: require('./resources/task.png'),
   trafficLights: require('./resources/trafficLights.png'),
   trash: require('./resources/trash.png'),
   vote: require('./resources/vote.png'),

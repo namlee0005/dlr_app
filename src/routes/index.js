@@ -8,8 +8,6 @@ import MainDrawer from './Drawer';
 const Stack = createStackNavigator();
 
 const Routes = () => {
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator

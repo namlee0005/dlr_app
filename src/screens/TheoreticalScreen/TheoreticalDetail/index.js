@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    height: HEIGHT * 0.75,
+    height: HEIGHT / 2,
   },
   boxAnswer: {
     position: 'absolute',

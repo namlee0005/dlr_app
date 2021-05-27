@@ -24,27 +24,8 @@ const HeaderLeft = () => {
   );
 };
 
-const HeaderDrawer = () => {
-  const navigation = useNavigation();
-  const toggleDrawer = useCallback(() => {
-    navigation.openDrawer();
-  }, [navigation]);
-
-  return (
-    <TouchableBox
-      square={40}
-      onPress={toggleDrawer}
-      justify="center"
-      align="center"
-    >
-      <ImageIcon name="menu" square={24} />
-    </TouchableBox>
-  );
-};
-
 const HomeStack = () => {
   const headerLeft = useCallback(() => <HeaderLeft />, []);
-  const headerDrawer = useCallback(() => <HeaderDrawer />, []);
 
   return (
     <Stack.Navigator initialRouteName="HomeScreen">
@@ -52,8 +33,7 @@ const HomeStack = () => {
         name="HomeScreen"
         component={HomeScreen}
         options={{
-          title: 'Ôn thi GPLX Máy',
-          headerLeft: headerDrawer,
+          headerTransparent: true,
         }}
       />
       <Stack.Screen
@@ -65,6 +45,7 @@ const HomeStack = () => {
         name="ExamScreen"
         component={ExamScreen}
         options={({ route }) => ({
+          headerTransparent: true,
           title: capitalize(route?.params?.exam?.title),
           headerLeft,
         })}
