@@ -112,7 +112,12 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
 
   return (
     <Box margin={[16, 0, 0, 0]}>
-      <Typography>{item?.question.trim()}</Typography>
+      <Typography>
+        {item?.question.trim()}{' '}
+        {item?.isSentenceParalysis === 1 && (
+          <Typography color="#e6d00e">(Câu điểm liệt)</Typography>
+        )}
+      </Typography>
       {item?.image ? (
         <Box justify="center" align="center">
           <FastImage source={item?.image} style={styles.image} />

@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
-import { StyleSheet, FlatList, Dimensions } from 'react-native';
+import { FlatList, Dimensions } from 'react-native';
 import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
 import realm from '@src/realms/realm';
 
-const TARBAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10;
+const TAR_BAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10;
 
 const data = [
   {
@@ -112,14 +112,14 @@ const Item = ({ item, navigation, examTheoretical }) => {
         <Box flexDirection="row" align="center" margin={[8, 0, 0, 0]}>
           <Box
             height={4}
-            width={TARBAR_WIDTH}
+            width={TAR_BAR_WIDTH}
             background="gray"
             borderRadius={2}
             flexDirection="row"
           >
             <Box
               height={4}
-              width={(TARBAR_WIDTH / getTotal()) * getIndex()}
+              width={(TAR_BAR_WIDTH / getTotal()) * getIndex()}
               background="green"
               borderRadius={2}
             />
@@ -139,7 +139,19 @@ const Item = ({ item, navigation, examTheoretical }) => {
 };
 
 const TheoreticalScreen = ({ navigation }) => {
-  const [examTheoretical] = useState(realm.objects('Theoretical'));
+  const [examTheoretical, setExamTheoretical] = useState(
+    realm.objects('Theoretical'),
+  );
+
+  useEffect(() => {
+    realm.addListener('change', () => {
+      setExamTheoretical(realm.objects('Theoretical'));
+    });
+    return () => {
+      realm.removeAllListeners();
+    };
+  }, []);
+
   const renderItem = useCallback(
     ({ item }) => {
       return (
@@ -159,7 +171,6 @@ const TheoreticalScreen = ({ navigation }) => {
         data={data}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        style={styles.contentContainerStyle}
         extraData={examTheoretical}
       />
     </Box>
@@ -167,7 +178,3 @@ const TheoreticalScreen = ({ navigation }) => {
 };
 
 export default TheoreticalScreen;
-
-const styles = StyleSheet.create({
-  contentContainerStyle: { flexGrow: 0 },
-});

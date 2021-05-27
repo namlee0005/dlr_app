@@ -158,7 +158,7 @@ const TheoreticalDetail = ({ navigation, route }) => {
             <ImageIcon name="chevronLeftPurple" circle={14} />
           </TouchableBox>
           <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
-            Câu {flatIndex + 1} / 25
+            Câu {flatIndex + 1} / {examTheoretical.length}
           </Typography>
           <TouchableBox onPress={onNext}>
             <ImageIcon name="chevronRightPurple" circle={14} />
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    height: HEIGHT / 2,
+    height: HEIGHT * 0.75,
   },
   boxAnswer: {
     position: 'absolute',
@@ -228,12 +228,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor:
-        status === 3
-          ? item?.selected === item?.correctAnswer
-            ? '#302EA7'
-            : '#E21B00'
-          : '#e3e3e3',
-      borderColor: status === 3 ? '#ffffff' : '#57db04',
+        item?.selected === item?.correctAnswer ? '#302EA7' : '#E21B00',
+      borderColor: '#ffffff',
       borderWidth: 1,
     };
   },
@@ -249,7 +245,7 @@ const styles = StyleSheet.create({
     return {
       fontWeight: '300',
       fontSize: 9,
-      color: status === 3 ? '#ffffff' : null,
+      color: '#ffffff',
     };
   },
 });

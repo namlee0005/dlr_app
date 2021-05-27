@@ -90,6 +90,7 @@ export const objectTheoretical = (realmObject, type) => {
     type: type || realmObject?.type,
     urlImage: realmObject?.urlImage ? realmObject?.urlImage : null,
     selected: -1,
+    isSentenceParalysis: realmObject?.isSentenceParalysis,
   };
 };
 
