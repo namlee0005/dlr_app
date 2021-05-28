@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
@@ -14,6 +9,7 @@ import realm from '@src/realms/realm';
 import { v4 as uuid } from 'uuid';
 import CircleExam from '@src/components/CircleExam';
 import { createA1Exam } from '@src/utils/handleA1Exam';
+import HeaderLeft from '@src/components/HeaderLeft';
 
 const ItemTopic = ({ item, navigation }) => {
   const numberAnswered = useCallback(() => {
@@ -106,16 +102,6 @@ const ItemTopic = ({ item, navigation }) => {
 const TopicScreen = ({ navigation }) => {
   const [topicExam, setTopicExam] = useState(realm.objects('TopicExam'));
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
-          <ImageIcon name="random" square={24} />
-        </TouchableBox>
-      ),
-    });
-  });
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
       setTopicExam(realm.objects('TopicExam'));
@@ -139,6 +125,12 @@ const TopicScreen = ({ navigation }) => {
   );
   return (
     <Box flex={1} margin={[0, 16]}>
+      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+        <HeaderLeft />
+        <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
+          <ImageIcon name="random" square={24} />
+        </TouchableBox>
+      </Box>
       <FlatList
         data={topicExam}
         renderItem={renderItem}

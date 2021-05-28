@@ -1,9 +1,4 @@
-import React, {
-  useLayoutEffect,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { convertLongToTime } from '@src/utils/formatters/date';
 import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
@@ -13,7 +8,12 @@ import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
 import realm from '@src/realms/realm';
 import { useNavigation } from '@react-navigation/native';
-import { FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
 import { v4 as uuid } from 'uuid';
 
 const HeaderLeft = ({ time, idExam, title, status, total }) => {
@@ -85,7 +85,9 @@ const HeaderRight = ({ idExam, visibleMenuAnswer, setVisibleMenuAnswer }) => {
   );
 };
 
-const ExamScreen = ({ navigation, route }) => {
+const HEIGHT = Dimensions.get('window').height;
+
+const ExamScreen = ({ route }) => {
   const [exam] = useState(
     realm
       .objects('TopicExam')
@@ -96,29 +98,6 @@ const ExamScreen = ({ navigation, route }) => {
   const [itemExam, setItemExam] = useState(exam?.questions[0]);
   const [flatIndex, setFlatIndex] = useState(0);
   const [visibleMenuAnswer, setVisibleMenuAnswer] = useState(false);
-
-  const headerLeft = useCallback(
-    () => (
-      <HeaderLeft
-        time={countDown}
-        idExam={route.params.idExam}
-        title={exam?.title}
-        status={exam?.status}
-        total={exam?.total}
-      />
-    ),
-    [countDown, exam, route.params.idExam],
-  );
-  const headerRight = useCallback(
-    () => (
-      <HeaderRight
-        idExam={route.params.idExam}
-        setVisibleMenuAnswer={setVisibleMenuAnswer}
-        visibleMenuAnswer={visibleMenuAnswer}
-      />
-    ),
-    [route.params.idExam, visibleMenuAnswer, setVisibleMenuAnswer],
-  );
 
   const onNext = useCallback(() => {
     if (exam?.questions.length - 1 === flatIndex) {
@@ -154,13 +133,6 @@ const ExamScreen = ({ navigation, route }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, [countDown, exam]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft,
-      headerRight,
-    });
-  }, [countDown, navigation, exam?.title, headerLeft, headerRight]);
 
   const renderItem = useCallback(
     ({ item, index }) => {
@@ -205,8 +177,22 @@ const ExamScreen = ({ navigation, route }) => {
 
   return (
     <Box flex={1}>
+      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+        <HeaderLeft
+          time={countDown}
+          idExam={route.params.idExam}
+          title={exam?.title}
+          status={exam?.status}
+          total={exam?.total}
+        />
+        <HeaderRight
+          idExam={route.params.idExam}
+          setVisibleMenuAnswer={setVisibleMenuAnswer}
+          visibleMenuAnswer={visibleMenuAnswer}
+        />
+      </Box>
       <Box
-        margin={[0, 16]}
+        margin={[16, 16, 0, 16]}
         padding={[0, 10]}
         background="white"
         borderRadius={16}
@@ -262,12 +248,13 @@ const styles = StyleSheet.create({
   underlined: { backgroundColor: '#302EA7' },
   boxMenu: {
     position: 'absolute',
-    top: 0,
+    top: 90,
     left: 0,
     right: 0,
     bottom: 0,
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
+    height: HEIGHT / 2,
   },
   boxAnswer: {
     position: 'absolute',

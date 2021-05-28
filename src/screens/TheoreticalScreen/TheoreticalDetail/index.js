@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useLayoutEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import Box from '@src/components/Box';
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
@@ -24,18 +24,14 @@ const HeaderLeft = ({ title }) => {
   }, [navigation]);
 
   return (
-    <TouchableBox
-      flexDirection="row"
-      margin={[0, 16, 0, 0]}
-      onPress={goBack}
-      justify="center"
-      align="center"
-    >
-      <ImageIcon name="backArrow" square={24} />
+    <Box margin={[0, 16, 0, 0]} flexDirection="row">
+      <TouchableBox onPress={goBack} justify="center" align="center">
+        <ImageIcon name="backArrow" square={24} />
+      </TouchableBox>
       <Typography padding={[0, 10, 0, 0]} fontSize={18} style={styles.title}>
         {title}
       </Typography>
-    </TouchableBox>
+    </Box>
   );
 };
 
@@ -63,23 +59,6 @@ const TheoreticalDetail = ({ navigation, route }) => {
   const [flatIndex, setFlatIndex] = useState(0);
   const [visibleMenuAnswer, setVisibleMenuAnswer] = useState(false);
 
-  // console.log(itemExam, 'itemExam');
-
-  const headerLeft = useCallback(
-    () => <HeaderLeft title={route?.params?.title} />,
-    [route.params?.title],
-  );
-
-  const headerRight = useCallback(
-    () => (
-      <HeaderRight
-        setVisibleMenuAnswer={setVisibleMenuAnswer}
-        visibleMenuAnswer={visibleMenuAnswer}
-      />
-    ),
-    [visibleMenuAnswer, setVisibleMenuAnswer],
-  );
-
   const onNext = useCallback(() => {
     if (examTheoretical.length - 1 === flatIndex) {
       return;
@@ -95,14 +74,6 @@ const TheoreticalDetail = ({ navigation, route }) => {
     setFlatIndex(flatIndex - 1);
     setItemExam(examTheoretical[flatIndex - 1]);
   }, [examTheoretical, flatIndex]);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft,
-      title: null,
-      headerRight,
-    });
-  }, [navigation, headerLeft, headerRight]);
 
   const renderItem = useCallback(
     ({ item, index }) => {
@@ -147,6 +118,13 @@ const TheoreticalDetail = ({ navigation, route }) => {
 
   return (
     <Box flex={1}>
+      <Box margin={[50, 0, 16, 0]} flexDirection="row" justify="space-between">
+        <HeaderLeft title={route?.params?.title} />
+        <HeaderRight
+          setVisibleMenuAnswer={setVisibleMenuAnswer}
+          visibleMenuAnswer={visibleMenuAnswer}
+        />
+      </Box>
       <Box
         margin={[0, 16]}
         padding={[0, 10]}
@@ -199,7 +177,7 @@ const styles = StyleSheet.create({
   underlined: { backgroundColor: '#302EA7' },
   boxMenu: {
     position: 'absolute',
-    top: 0,
+    top: 90,
     left: 0,
     right: 0,
     bottom: 0,

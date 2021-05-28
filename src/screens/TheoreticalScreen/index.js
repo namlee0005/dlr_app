@@ -6,48 +6,49 @@ import React, {
 } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
-import { FlatList, Dimensions } from 'react-native';
+import { FlatList, Dimensions, StyleSheet } from 'react-native';
 import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
 import realm from '@src/realms/realm';
+import HeaderLeft from '@src/components/HeaderLeft';
 
-const TAR_BAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10;
+const TAR_BAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10 - 8;
 
 const data = [
   {
     id: 2,
-    title: '20 CÂU HỎI ĐIỂM LIỆT',
-    content: '20 câu hỏi điểm liệt',
+    title: '20 câu hỏi điểm liệt',
+    content: 'Gồm 20 câu hỏi',
     image: 'warning',
   },
   {
     id: 1,
-    title: 'KHÁI NIỆM VÀ QUY TẮC',
+    title: 'Khái niệm và quy tắc',
     content: 'Gồm 83 câu hỏi',
     content1: '(18 điểm liệt)',
     image: 'checklist',
   },
   {
     id: 3,
-    title: 'VĂN HOÁ VÀ ĐẠO ĐỨC LÁI XE',
+    title: 'Văn hóa và đạo đức lái xe',
     content: 'Gồm 5 câu hỏi',
     image: 'talk',
   },
   {
     id: 4,
-    title: 'KỸ THUẬT LÁI XE',
+    title: 'Kỹ thuật lái xe',
     content: 'Gồm 12 câu hỏi',
     image: 'driver',
   },
   {
     id: 5,
-    title: 'BIỂN BÁO ĐƯỜNG BỘ',
+    title: 'Biển báo đường bộ',
     content: 'Gồm 65 câu hỏi',
     image: 'directionBoard',
   },
   {
     id: 6,
-    title: 'SA HÌNH',
+    title: 'Sa hình',
     content: 'Gồm 35 câu hỏi',
     image: 'carWifi',
   },
@@ -73,44 +74,30 @@ const Item = ({ item, navigation, examTheoretical }) => {
     return arr.length;
   }, [examTheoretical, item?.id]);
 
-  const getColor = useCallback(() => {
-    if (item.id === 1) {
-      return 'red';
-    } else if (item.id === 2) {
-      return 'green';
-    } else if (item.id === 3) {
-      return '#0e7369';
-    } else if (item.id === 4) {
-      return '#b06b04';
-    } else if (item.id === 5) {
-      return '#400396';
-    }
-    return '#305205';
-  }, [item]);
-
   return (
     <TouchableBox
-      height={100}
       flexDirection="row"
-      margin={[8, 0, 0, 0]}
+      align="center"
+      justify="center"
+      padding={[4, 16]}
+      margin={[16, 0, 0, 0]}
       onPress={onItemPress}
+      background="white"
+      borderRadius={16}
+      shadowDepth={0.8}
     >
-      <Box
-        background={getColor()}
-        borderRadius={[20, 0, 20, 0]}
-        width={50}
-        justify="center"
-        align="center"
-      >
+      <Box background="white">
         <ImageIcon
           name={item.image}
-          height={28}
-          width={30}
           resizeMode="contain"
+          style={styles.images}
         />
       </Box>
-      <Box padding={[8, 8, 8, 0]} background="white" flex={1}>
-        <Typography margin={[0, 0, 4, 0]}>{item.title}</Typography>
+
+      <Box padding={[8, 16, 8, 0]} flex={1}>
+        <Typography margin={[0, 0, 4, 0]} fontSize={16}>
+          {item.title}
+        </Typography>
         <Typography fontSize={12} color="gray" margin={[0, 0, 4, 0]}>
           {item.content} <Typography>{item.content1}</Typography>
         </Typography>
@@ -118,24 +105,24 @@ const Item = ({ item, navigation, examTheoretical }) => {
           <Box
             height={4}
             width={TAR_BAR_WIDTH}
-            background="gray"
+            background="rgba(130, 130, 130, 0.2)"
             borderRadius={2}
             flexDirection="row"
           >
             <Box
               height={4}
               width={(TAR_BAR_WIDTH / getTotal()) * getIndex()}
-              background="green"
+              background="#302EA7"
               borderRadius={2}
             />
           </Box>
         </Box>
       </Box>
 
-      <Box width={80} borderRadius={[0, 20]} background="white">
+      <Box borderRadius={[0, 20]} background="white">
         <Typography margin={[0, 0, 4, 0]} />
         <Typography fontSize={12} color="gray" margin={[0, 0, 4, 0]} />
-        <Typography margin={[12, 12, 0, 0]}>
+        <Typography margin={[12, 12, 0, 0]} fontSize={12}>
           {getIndex()} / {getTotal()}
         </Typography>
       </Box>
@@ -195,15 +182,25 @@ const TheoreticalScreen = ({ navigation }) => {
   );
 
   return (
-    <Box flex={1} margin={[0, 12]}>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        extraData={examTheoretical}
-      />
+    <Box flex={1} margin={[0, 16]}>
+      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+        <HeaderLeft />
+        <HeaderRight />
+      </Box>
+      <Box flex={1}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          extraData={examTheoretical}
+        />
+      </Box>
     </Box>
   );
 };
+
+const styles = StyleSheet.create({
+  images: { height: 48, width: 48 },
+});
 
 export default TheoreticalScreen;

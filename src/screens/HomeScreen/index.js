@@ -85,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
     <Box flex={1}>
       <Box background="#302EA7" borderRadius={[0, 0, 24, 24]} padding={[0, 16]}>
         <TouchableBox
-          margin={[46, 0, 0, 0]}
+          margin={[50, 0, 0, 0]}
           style={styles.button}
           onPress={toggleDrawer}
         >
