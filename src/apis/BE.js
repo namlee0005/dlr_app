@@ -17,12 +17,11 @@ BE.interceptors.response.use(
   { global: false },
 );
 
-
 export const injectBearer = (token, configs) => {
   if (!configs) {
     return {
       headers: {
-        Authorization: `TOKEN_DLR`,
+        Authorization: 'TOKEN_DLR',
       },
     };
   }
@@ -32,15 +31,14 @@ export const injectBearer = (token, configs) => {
       ...configs,
       headers: {
         ...configs.headers,
-        Authorization: `${token}`
+        Authorization: `${token}`,
       },
     };
   }
   return {
     ...configs,
     headers: {
-      Authorization: `${token}`
-
+      Authorization: `${token}`,
     },
   };
 };
@@ -50,11 +48,12 @@ export const privateRequest = async (request, url, configs, token) => {
 };
 
 export const PATHS = {
-
   //getAllA1
-  A1: `/api/v1.0/a1`,
+  A1: '/api/v1.0/a1',
   GET_IMAGE: (url) => `/image/${url}`,
-  UPDATE_IMAGE: `/api/v1.0/image/upload`
+  UPDATE_IMAGE: '/api/v1.0/image/upload',
+  TRAFFIC_SIGNS: (type, page, perPage) =>
+    `/api/v1.0/traffic-signs?type=${type}&page=${page}&perPage=${perPage}`,
 };
 
 export const AUTH_PATHS = {};

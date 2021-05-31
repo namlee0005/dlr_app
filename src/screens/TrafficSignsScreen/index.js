@@ -2,25 +2,20 @@ import React from 'react';
 import Box from '@src/components/Box';
 import HeaderLeft from '@src/components/HeaderLeft';
 // import useFlatList from '@src/hooks/useFlatList';
-// improt
+// import { getTrafficSigns } from './service';
 
 const TrafficSignsScreen = () => {
   // const { flatListProps } = useFlatList(
   //   (lastResult) =>
-  //     searchShopService({
-  //       searchText: searchInput,
-  //       provinceId: 0,
-  //       countryCode: HomeReducer.userInfo.country_code,
+  //     getTrafficSigns({
   //       current: lastResult?.current,
-  //       data: lastResult?.data,
-  //       perKeySearch: lastResult?.perKeySearch,
+  //       totalPages: lastResult?.totalPages,
   //     }),
   //   {
-  //     refreshDeps: [searchInput],
   //     loadMore: true,
   //     debounceInterval: 250,
   //     isNoMore: (e) => {
-  //       return e?.data?.shops?.length > 0;
+  //       return e?.current >= e?.totalPages;
   //     },
   //   },
   // );
