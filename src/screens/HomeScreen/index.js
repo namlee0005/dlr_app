@@ -18,6 +18,9 @@ const ItemHome = ({ item, navigation, length }) => {
         case 2:
           navigation.navigate('TheoreticalScreen');
           break;
+        case 5:
+          navigation.navigate('TrafficSignsScreen');
+          break;
       }
     },
     [navigation],

@@ -3,9 +3,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '@src/screens/HomeScreen';
 import TopicScreen from '@src/screens/TopicScreen';
 import ExamScreen from '@src/screens/TopicScreen/ExamScreen';
-
 import TheoreticalScreen from '@src/screens/TheoreticalScreen';
 import TheoreticalDetail from '@src/screens/TheoreticalScreen/TheoreticalDetail';
+import TrafficSignsScreen from '@src/screens/TrafficSignsScreen';
+
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
@@ -45,6 +46,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="TheoreticalDetail"
         component={TheoreticalDetail}
+        options={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="TrafficSignsScreen"
+        component={TrafficSignsScreen}
         options={{
           headerTransparent: true,
         }}

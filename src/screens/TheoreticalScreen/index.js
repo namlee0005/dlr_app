@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import { FlatList, Dimensions, StyleSheet } from 'react-native';
@@ -150,14 +145,6 @@ const TheoreticalScreen = ({ navigation }) => {
   const [examTheoretical, setExamTheoretical] = useState(
     realm.objects('Theoretical'),
   );
-
-  const headerRight = useCallback(() => <HeaderRight />, []);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight,
-    });
-  }, [navigation, headerRight]);
 
   useEffect(() => {
     realm.addListener('change', () => {
