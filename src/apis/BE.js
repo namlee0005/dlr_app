@@ -1,6 +1,8 @@
 import { extend } from 'umi-request';
 
-// DEV;
+export const URL = 'http://207.148.73.181:8082';
+export const URL_IMAGE = 'http://207.148.73.181:8082/image/';
+
 export const BE = extend({
   prefix: 'http://207.148.73.181:8082',
 });

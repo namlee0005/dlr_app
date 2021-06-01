@@ -1,7 +1,8 @@
 import { useRef, useCallback } from 'react';
 import { useRequest } from '@umijs/hooks';
+import { v4 as uuid } from 'uuid';
 
-const useFlatlist = (service, options) => {
+const useFlatList = (service, options) => {
   const request = useRequest(service, {
     loadMore: true,
     debounceInterval: 250,
@@ -24,7 +25,7 @@ const useFlatlist = (service, options) => {
     }
   }, [request]);
 
-  const keyExtractor = useCallback((item) => `${item.id}`, []);
+  const keyExtractor = useCallback(() => uuid(), []);
 
   const flatListProps = {
     onMomentumScrollBegin,
@@ -39,4 +40,4 @@ const useFlatlist = (service, options) => {
   return { ...request, flatListProps };
 };
 
-export default useFlatlist;
+export default useFlatList;

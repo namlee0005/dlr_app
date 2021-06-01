@@ -5,7 +5,7 @@ export const getTrafficSigns = async (params) => {
     let perPage = 10;
     let type = params?.type || 1;
 
-    if (params?.current) {
+    if (params?.current !== undefined) {
       page = params?.current + 1;
     }
 
@@ -13,9 +13,11 @@ export const getTrafficSigns = async (params) => {
       BE.get,
       PATHS.TRAFFIC_SIGNS(type, page, perPage),
     );
-
-    // console.log(result, 'result');
-    return result?.data;
+    return {
+      list: result?.data?.data,
+      current: page,
+      totalPages: result?.data?.totalPage,
+    };
   } catch (error) {
     // console.error(error);
   }

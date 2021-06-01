@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Box from './Box';
 
-const Underlined = ({ style }) => {
-  return <Box style={[styles.container, style]} />;
+const Underlined = ({ style, color }) => {
+  return <Box style={[styles.container, style, { backgroundColor: color }]} />;
 };
 
 const styles = StyleSheet.create({
