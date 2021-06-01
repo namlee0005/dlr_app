@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
@@ -16,6 +16,8 @@ const data = [
 const TabBar = ({ setType }) => {
   const [tabBarData, setTabBarData] = useState(data);
 
+  const refFlatList = useRef(null);
+
   const renderItem = useCallback(
     ({ item }) => {
       const onPress = () => {
@@ -25,11 +27,17 @@ const TabBar = ({ setType }) => {
         );
         setTabBarData(temp);
         setType(item?.type);
+        refFlatList.current.scrollToIndex({
+          animated: true,
+          index: item?.type - 1,
+        });
       };
       return (
         <Box margin={[0, 0, 0, 8]}>
           <TouchableBox onPress={onPress} margin={[0, 0, 2, 0]}>
-            <Typography>{item?.name}</Typography>
+            <Typography color={item?.selected ? '#302EA7' : null}>
+              {item?.name}
+            </Typography>
           </TouchableBox>
           {item?.selected && <Underlined color="#302EA7" />}
         </Box>
@@ -41,6 +49,7 @@ const TabBar = ({ setType }) => {
   return (
     <Box margin={[16, 0]}>
       <FlatList
+        ref={refFlatList}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         data={tabBarData}
