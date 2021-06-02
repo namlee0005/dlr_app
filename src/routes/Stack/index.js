@@ -6,6 +6,7 @@ import ExamScreen from '@src/screens/TopicScreen/ExamScreen';
 import TheoreticalScreen from '@src/screens/TheoreticalScreen';
 import TheoreticalDetail from '@src/screens/TheoreticalScreen/TheoreticalDetail';
 import TrafficSignsScreen from '@src/screens/TrafficSignsScreen';
+import TipsScreen from '@src/screens/TipsScreen';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="TrafficSignsScreen"
         component={TrafficSignsScreen}
+        options={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="TipsScreen"
+        component={TipsScreen}
         options={{
           headerTransparent: true,
         }}
