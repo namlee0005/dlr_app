@@ -7,6 +7,7 @@ import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
 import colors from '@src/utils/colors';
 import realm from '@src/realms/realm';
+import AdView from '@src/components/AdView';
 
 const ItemHome = ({ item, navigation, length }) => {
   const onItemPress = useCallback(
@@ -114,7 +115,7 @@ const HomeScreen = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
-        {/* quang cao     */}
+        <AdView type="image" media={false} />
       </Box>
     </Box>
   );

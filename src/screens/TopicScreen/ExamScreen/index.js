@@ -15,6 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { v4 as uuid } from 'uuid';
+import AdView from '@src/components/AdView';
 
 const HeaderLeft = ({ time, idExam, title, status, total }) => {
   const navigation = useNavigation();
@@ -238,6 +239,7 @@ const ExamScreen = ({ route }) => {
           </Box>
         </TouchableWithoutFeedback>
       )}
+      <AdView type="image" media={true} />
     </Box>
   );
 };

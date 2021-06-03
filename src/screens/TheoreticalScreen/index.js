@@ -6,6 +6,7 @@ import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
 import realm from '@src/realms/realm';
 import HeaderLeft from '@src/components/HeaderLeft';
+import AdView from '@src/components/AdView';
 
 const TAR_BAR_WIDTH = Dimensions.get('window').width - 24 - 130 - 10 - 8;
 
@@ -182,6 +183,7 @@ const TheoreticalScreen = ({ navigation }) => {
           extraData={examTheoretical}
         />
       </Box>
+      <AdView type="image" media={false} />
     </Box>
   );
 };
