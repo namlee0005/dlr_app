@@ -71,7 +71,7 @@ const ItemTopic = ({ item, navigation }) => {
 
   return (
     <TouchableBox onPress={onPress} flex={1} margin={[12, 0, 0, 0]}>
-      <Box height={76} borderRadius={16} shadowDepth={0.4}>
+      <Box height={76} borderRadius={16}>
         <Box style={styles.child_card}>
           <Box flexDirection="row" align="center">
             <CircleExam

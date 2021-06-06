@@ -8,7 +8,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AdManager } from 'react-native-admob-native-ads';
 
 AdManager.setRequestConfiguration({
-  tagForChildDirectedTreatment: false,
+  tagForChildDirectedTreatment: true,
+  tagForUnderAgeOfConsent: true,
 });
 
 const App = () => {

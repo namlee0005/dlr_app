@@ -114,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
           data={state?.cardHome}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
         />
         <AdView type="image" media={false} />
       </Box>

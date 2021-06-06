@@ -1,10 +1,10 @@
 import { extend } from 'umi-request';
 
-export const URL = 'http://207.148.73.181:8082';
-export const URL_IMAGE = 'http://207.148.73.181:8082/image/';
+export const URL = 'http://dlr.namdev.tech';
+export const URL_IMAGE = 'http://dlr.namdev.tech/image/';
 
 export const BE = extend({
-  prefix: 'http://207.148.73.181:8082',
+  prefix: 'http://dlr.namdev.tech',
 });
 
 BE.interceptors.response.use(
