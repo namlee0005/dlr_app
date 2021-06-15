@@ -25,7 +25,12 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
+
+
+
 	<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -75,7 +80,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-1166686303975319~7564792264</string>
+  <key>GADApplicationIdentifier</key>
+  <string>ca-app-pub-3940256099942544~1458002511</string>
 </dict>
 </plist>

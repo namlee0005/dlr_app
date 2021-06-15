@@ -13,7 +13,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.15.2",
+    "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
@@ -21,8 +21,8 @@
     "@umijs/hooks": "^1.9.3",
     "i18next": "^20.2.1",
     "lodash": "^4.17.21",
-    "react": "17.0.1",
-    "react-native": "0.64.0",
+    "react": "^17.0.2",
+    "react-native": "^0.64.2",
     "react-native-admob-native-ads": "^0.4.1",
     "react-native-auto-height-image": "^3.2.4",
     "react-native-fast-image": "^8.3.4",

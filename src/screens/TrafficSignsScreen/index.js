@@ -1,41 +1,20 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@src/components/Box';
 import HeaderLeft from '@src/components/HeaderLeft';
-import useFlatList from '@src/hooks/useFlatList';
-import { getTrafficSigns } from './service';
 import { Dimensions, FlatList } from 'react-native';
-import { URL_IMAGE } from '@src/apis/BE';
 import AutoHeightImage from 'react-native-auto-height-image';
 import TabBar from './TabBar';
+import { bbc } from '@src/utils/constant';
+import resources from '@src/components/ImageIcon/resources';
 const DEVICE = Dimensions.get('window');
 
 const TrafficSignsScreen = () => {
-  const [type, setType] = useState(1);
-
-  const { flatListProps } = useFlatList(
-    (lastResult) =>
-      getTrafficSigns({
-        type: type,
-        current: lastResult?.current,
-        totalPages: lastResult?.totalPages,
-      }),
-    {
-      refreshDeps: [type],
-      loadMore: true,
-      debounceInterval: 250,
-      isNoMore: (e) => {
-        return e?.current >= e?.totalPages;
-      },
-    },
-  );
-
+  const [images, setImages] = useState(bbc);
   const renderItem = useCallback(({ item }) => {
     return (
       <Box align="center" justify="center" margin={[0, 0, 8, 0]}>
         <AutoHeightImage
-          source={{
-            uri: URL_IMAGE + item?.urlImage,
-          }}
+          source={resources[item.image]}
           width={DEVICE.width - 32}
         />
       </Box>
@@ -47,11 +26,13 @@ const TrafficSignsScreen = () => {
       <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
         <HeaderLeft />
       </Box>
-      <TabBar setType={setType} />
+      <TabBar setImages={setImages} />
       <Box flex={1}>
         <FlatList
-          {...flatListProps}
+          data={images}
+          keyExtractor={(item) => item?.id}
           renderItem={renderItem}
+          extraData={images}
           showsVerticalScrollIndicator={false}
         />
       </Box>

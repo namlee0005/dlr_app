@@ -5,6 +5,7 @@ import TouchableBox from '@src/components/TouchableBox';
 import { FlatList } from 'react-native';
 import { v4 as uuid } from 'uuid';
 import Underlined from '@src/components/Underlined';
+import { bbc, bbnh, bp, bhl, bcd } from '@src/utils/constant';
 const data = [
   { type: 1, name: 'Biển báo cấm', selected: true },
   { type: 2, name: 'Biển hiệu lệnh', selected: false },
@@ -13,7 +14,7 @@ const data = [
   { type: 5, name: 'Biển phụ', selected: false },
 ];
 
-const TabBar = ({ setType }) => {
+const TabBar = ({ setImages }) => {
   const [tabBarData, setTabBarData] = useState(data);
 
   const refFlatList = useRef(null);
@@ -26,7 +27,27 @@ const TabBar = ({ setType }) => {
           i.type === item?.type ? (i.selected = true) : (i.selected = false),
         );
         setTabBarData(temp);
-        setType(item?.type);
+
+        switch (item?.type) {
+          case 1:
+            setImages(bbc);
+            break;
+          case 2:
+            setImages(bhl);
+            break;
+          case 3:
+            setImages(bcd);
+            break;
+          case 4:
+            setImages(bbnh);
+            break;
+          case 5:
+            setImages(bp);
+            break;
+          default:
+            break;
+        }
+
         refFlatList.current.scrollToIndex({
           animated: true,
           index: item?.type - 1,
@@ -43,7 +64,7 @@ const TabBar = ({ setType }) => {
         </Box>
       );
     },
-    [setType, tabBarData],
+    [setImages, tabBarData],
   );
 
   return (
