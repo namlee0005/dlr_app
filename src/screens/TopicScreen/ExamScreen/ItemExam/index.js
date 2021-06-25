@@ -129,9 +129,9 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
   return (
     <Box margin={[16, 0, 0, 0]}>
       <Typography>{item?.question.trim()}</Typography>
-      {item?.image ? (
+      {item?.urlImage ? (
         <Box justify="center" align="center">
-          <FastImage source={item?.image} style={styles.image} />
+          <FastImage source={item?.urlImage} style={styles.image} />
         </Box>
       ) : null}
       {renderAnswer(item?.answer1, 0)}

@@ -7,7 +7,7 @@ const ExamA1 = {
   name: 'ExamA1',
   primaryKey: 'id',
   properties: {
-    id: 'string',
+    id: 'int',
     question: 'string',
     explain: 'string?',
     correctAnswer: 'int',
