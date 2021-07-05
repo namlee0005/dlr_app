@@ -2,12 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import TouchableBox from '@src/components/TouchableBox';
 import Typography from '@src/components/Typography';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import Box from '@src/components/Box';
-import FastImage from 'react-native-fast-image';
 import { v4 as uuid } from 'uuid';
 import realm from '@src/realms/realm';
 import Underlined from '@src/components/Underlined';
+import ImageIcon from '@src/components/ImageIcon';
+const DEVICE = Dimensions.get('window');
 
 const ItemExam = ({ item, flatIndex, idExam, status }) => {
   const [checkBox, setCheckBox] = useState([]);
@@ -130,9 +131,11 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
     <Box margin={[16, 0, 0, 0]}>
       <Typography>{item?.question.trim()}</Typography>
       {item?.urlImage ? (
-        <Box justify="center" align="center">
-          <FastImage source={item?.urlImage} style={styles.image} />
-        </Box>
+        <ImageIcon
+          name={item?.urlImage}
+          style={styles.image}
+          resizeMode="contain"
+        />
       ) : null}
       {renderAnswer(item?.answer1, 0)}
       {renderAnswer(item?.answer2, 1)}
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
   numberAnswerFail: { backgroundColor: '#E21B00', borderWidth: 0 },
   textNumberAnswer: { fontSize: 16, color: '#FFFFFF' },
   textNumberAnswer1: { fontSize: 16, color: '#4F4F4F' },
-  image: { height: 100, width: 100, marginTop: 10 },
+  image: { width: DEVICE.width - 32 - 32, height: 200 },
   answer: { flexShrink: 1 },
   underlined: { backgroundColor: '#302EA7' },
 });
