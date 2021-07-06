@@ -18,7 +18,7 @@ const ItemTopic = ({ item, navigation }) => {
       .objects('TopicExam')
       .filtered('id =  ' + item?.id)
       .map((i) => i)[0];
-    if (exam?.status === 3) {
+    if (exam?.status === 3 || exam?.status === 4) {
       return exam?.total;
     }
     return exam?.questions.filter((i) => i.selected !== -1).length;
@@ -30,7 +30,7 @@ const ItemTopic = ({ item, navigation }) => {
       .filtered('id =  ' + item?.id)
       .map((i) => i)[0];
     realm.write(() => {
-      if (exam.status !== 3) {
+      if (exam.status !== 3 && exam.status !== 4) {
         exam.status = 2;
       }
     });
@@ -45,13 +45,13 @@ const ItemTopic = ({ item, navigation }) => {
     } else if (item?.status === 2) {
       return 'rgb(242,153,74)';
     }
-    return item?.total > 21 ? 'rgb(0,227,64)' : 'rgb(226,27,0)';
+    return item?.status !== 3 ? 'rgb(0,227,64)' : 'rgb(226,27,0)';
   }, [item]);
   // 1: làm bài, 2: đang làm, 3: xong
   const getContent = useCallback(
     (total) => {
       if (item?.status === 1) {
-        return '25 câu/20 phút';
+        return '25 câu/19 phút';
       } else if (item?.status === 2) {
         return `Còn ${convertLongToTime1(item?.time)}`;
       }
@@ -66,7 +66,7 @@ const ItemTopic = ({ item, navigation }) => {
     } else if (item?.status === 2) {
       return 'Tiếp tục';
     }
-    return item?.total > 21 ? 'Đỗ' : 'Trượt';
+    return item?.status !== 3 ? 'Đỗ' : 'Trượt';
   }, [item]);
 
   return (

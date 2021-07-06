@@ -42,7 +42,11 @@ const HeaderLeft = ({ time, idExam, title, status, total }) => {
     >
       <ImageIcon name="backArrow" square={24} />
       <Typography padding={[0, 10, 0, 0]} fontSize={18} style={styles.title}>
-        {title} ({status === 3 ? total + '/' + 25 : convertLongToTime(time)})
+        {title} (
+        {status === 3 || status === 4
+          ? total + '/' + 25
+          : convertLongToTime(time)}
+        )
       </Typography>
     </TouchableBox>
   );
@@ -58,8 +62,14 @@ const HeaderRight = ({ idExam, visibleMenuAnswer, setVisibleMenuAnswer }) => {
     let incorrect = exam?.questions.filter(
       (i) => i.correctAnswer === i.selected,
     );
+
+    let sentenceParalysis = exam?.questions.filter(
+      (i) => i.isSentenceParalysis === 1 && i.correctAnswer !== i.selected,
+    );
+
     realm.write(() => {
-      exam.status = 3;
+      exam.status =
+        sentenceParalysis.length === 0 && incorrect.length > 21 ? 4 : 3;
       exam.total = incorrect.length;
     });
   }, [exam]);
@@ -68,7 +78,7 @@ const HeaderRight = ({ idExam, visibleMenuAnswer, setVisibleMenuAnswer }) => {
     setVisibleMenuAnswer(!visibleMenuAnswer);
   }, [setVisibleMenuAnswer, visibleMenuAnswer]);
 
-  return exam.status !== 3 ? (
+  return exam.status < 3 ? (
     <Box flexDirection="row" margin={[0, 0, 0, 16]}>
       <TouchableBox onPress={submit} margin={[0, 0, 0, 8]}>
         <Typography fontSize={18} fontStyle="bold" color={'#E21B00'}>
@@ -239,7 +249,9 @@ const ExamScreen = ({ route }) => {
           </Box>
         </TouchableWithoutFeedback>
       )}
-      <AdView type="image" media={true} />
+      <Box style={styles.ad}>
+        <AdView type="image" media={false} />
+      </Box>
     </Box>
   );
 };
@@ -303,6 +315,7 @@ const styles = StyleSheet.create({
       color: status === 3 ? '#ffffff' : null,
     };
   },
+  ad: { position: 'absolute', bottom: 0, left: 0, right: 0 },
 });
 
 export default ExamScreen;

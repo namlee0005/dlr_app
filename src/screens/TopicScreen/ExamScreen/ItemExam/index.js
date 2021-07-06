@@ -53,7 +53,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
 
   const getColorAnswer = useCallback(
     (number) => {
-      if (status === 3) {
+      if (status === 3 || status === 4) {
         if (item?.selected === -1 && number + 1 === item?.correctAnswer) {
           return '#302EA7';
         }
@@ -76,7 +76,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
 
   const getColorNumberAnswer = useCallback(
     (number) => {
-      if (status === 3) {
+      if (status === 3 || status === 4) {
         if (number + 1 === item?.selected) {
           if (item?.selected === item?.correctAnswer) {
             return styles.numberAnswerSelected;
@@ -103,7 +103,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
           <TouchableBox
             style={styles.touAnswer}
             onPress={() => toggleAnswer(number)}
-            disabled={status === 3}
+            disabled={status === 3 || status === 4}
           >
             <Box style={[styles.numberAnswer, getColorNumberAnswer(number)]}>
               <Typography
@@ -129,7 +129,12 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
 
   return (
     <Box margin={[16, 0, 0, 0]}>
-      <Typography>{item?.question.trim()}</Typography>
+      <Typography>
+        {item?.question.trim()}{' '}
+        {item?.isSentenceParalysis === 1 && (
+          <Typography color="#e6d00e">(Câu điểm liệt)</Typography>
+        )}
+      </Typography>
       {item?.urlImage ? (
         <ImageIcon
           name={item?.urlImage}
@@ -141,7 +146,7 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
       {renderAnswer(item?.answer2, 1)}
       {renderAnswer(item?.answer3, 2)}
       <Box margin={[0, 0, 10, 0]}>{renderAnswer(item?.answer4, 3)}</Box>
-      {status === 3 ? (
+      {status === 3 || status === 4 ? (
         <Box>
           <Underlined style={styles.underlined} />
           <Box style={styles.answer}>
