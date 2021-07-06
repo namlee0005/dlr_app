@@ -128,9 +128,17 @@ const TopicScreen = ({ navigation }) => {
     <Box flex={1} margin={[0, 16]}>
       <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
         <HeaderLeft />
-        <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
-          <ImageIcon name="random" square={24} />
-        </TouchableBox>
+        <Box flexDirection="row">
+          <TouchableBox
+            margin={[0, 10]}
+            onPress={() => navigation.navigate('ModalTitleNew')}
+          >
+            <ImageIcon name="random" square={24} />
+          </TouchableBox>
+          <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
+            <ImageIcon name="random" square={24} />
+          </TouchableBox>
+        </Box>
       </Box>
       <FlatList
         data={topicExam}
