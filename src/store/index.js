@@ -22,12 +22,12 @@ const dataCardHome = [
     title: 'Xem Câu Bị Sai',
     content: '1 câu hỏi sai',
   },
-  {
-    id: 4,
-    image: 'scale',
-    title: 'Xử Phạt Giao Thông',
-    content: 'NĐ 100/2019',
-  },
+  // {
+  //   id: 4,
+  //   image: 'scale',
+  //   title: 'Xử Phạt Giao Thông',
+  //   content: 'NĐ 100/2019',
+  // },
   {
     id: 5,
     image: 'trafficLights',

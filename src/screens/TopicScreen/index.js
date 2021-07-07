@@ -145,6 +145,7 @@ const TopicScreen = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={() => uuid()}
         extraData={topicExam}
+        showsVerticalScrollIndicator={false}
       />
       <AdView type="image" media={false} />
     </Box>

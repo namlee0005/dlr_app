@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { v4 as uuid } from 'uuid';
 import AdView from '@src/components/AdView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const HeaderLeft = ({ time, idExam, title, status, total }) => {
   const navigation = useNavigation();
@@ -227,31 +228,38 @@ const ExamScreen = ({ route }) => {
           visibleMenuAnswer={visibleMenuAnswer}
         />
       </Box>
-      <Box
-        margin={[16, 16, 0, 16]}
-        padding={[0, 10]}
-        background="white"
-        borderRadius={16}
-      >
-        <Box flexDirection="row" margin={[16, 16]} justify="space-between">
-          <TouchableBox onPress={onBack}>
-            <ImageIcon name="chevronLeftPurple" circle={14} />
-          </TouchableBox>
-          <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
-            Câu {flatIndex + 1} / 25
-          </Typography>
-          <TouchableBox onPress={onNext}>
-            <ImageIcon name="chevronRightPurple" circle={14} />
-          </TouchableBox>
+      <ScrollView>
+        <Box
+          margin={[16, 16, 0, 16]}
+          padding={[0, 10]}
+          background="white"
+          borderRadius={16}
+        >
+          <Box flexDirection="row" margin={[16, 16]} justify="space-between">
+            <TouchableBox onPress={onBack}>
+              <ImageIcon name="chevronLeftPurple" circle={14} />
+            </TouchableBox>
+            <Typography
+              fontSize={16}
+              style={styles.titleCard}
+              color={'#302EA7'}
+            >
+              Câu {flatIndex + 1} / 25
+            </Typography>
+            <TouchableBox onPress={onNext}>
+              <ImageIcon name="chevronRightPurple" circle={14} />
+            </TouchableBox>
+          </Box>
+          <Underlined style={styles.underlined} />
+          <ItemExam
+            item={itemExam}
+            flatIndex={flatIndex}
+            idExam={route.params.idExam}
+            status={exam?.status}
+          />
         </Box>
-        <Underlined style={styles.underlined} />
-        <ItemExam
-          item={itemExam}
-          flatIndex={flatIndex}
-          idExam={route.params.idExam}
-          status={exam?.status}
-        />
-      </Box>
+      </ScrollView>
+
       {visibleMenuAnswer && (
         <TouchableWithoutFeedback onPress={onClickMenu}>
           <Box flex={1} style={styles.boxMenu}>

@@ -7,7 +7,7 @@ import TheoreticalScreen from '@src/screens/TheoreticalScreen';
 import TheoreticalDetail from '@src/screens/TheoreticalScreen/TheoreticalDetail';
 import TrafficSignsScreen from '@src/screens/TrafficSignsScreen';
 import TipsScreen from '@src/screens/TipsScreen';
-
+import QuestionFails from '@src/screens/QuestionFails';
 const Stack = createStackNavigator();
 
 const HomeStack = () => {
@@ -61,6 +61,13 @@ const HomeStack = () => {
       <Stack.Screen
         name="TipsScreen"
         component={TipsScreen}
+        options={{
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="QuestionFails"
+        component={QuestionFails}
         options={{
           headerTransparent: true,
         }}

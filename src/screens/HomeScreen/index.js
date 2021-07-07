@@ -9,7 +9,7 @@ import colors from '@src/utils/colors';
 import realm from '@src/realms/realm';
 import AdView from '@src/components/AdView';
 
-const ItemHome = ({ item, navigation, length }) => {
+const ItemHome = ({ item, navigation, length, length2 }) => {
   const onItemPress = useCallback(
     ({ id }) => {
       switch (id) {
@@ -18,6 +18,9 @@ const ItemHome = ({ item, navigation, length }) => {
           break;
         case 2:
           navigation.navigate('TheoreticalScreen');
+          break;
+        case 3:
+          navigation.navigate('QuestionFails');
           break;
         case 5:
           navigation.navigate('TrafficSignsScreen');
@@ -29,6 +32,16 @@ const ItemHome = ({ item, navigation, length }) => {
     },
     [navigation],
   );
+
+  const getContent = useCallback(() => {
+    if (item.id === 1) {
+      return `${length} đề thi`;
+    }
+    if (item.id === 3) {
+      return `${length2} câu hỏi sai`;
+    }
+    return item.content;
+  }, [item.content, item.id, length, length2]);
 
   return (
     <TouchableBox
@@ -50,7 +63,7 @@ const ItemHome = ({ item, navigation, length }) => {
               {item.title}
             </Typography>
             <Typography color={colors.gray} margin={[4, 0, 0, 0]}>
-              {item.id === 1 ? `${length} đề thi` : item.content}
+              {getContent()}
             </Typography>
           </Box>
         </Box>
@@ -70,6 +83,7 @@ const HomeScreen = ({ navigation }) => {
           item={item}
           navigation={navigation}
           length={realm.objects('TopicExam')?.length}
+          length2={realm.objects('QuestionsFail')?.length}
         />
       );
     },
