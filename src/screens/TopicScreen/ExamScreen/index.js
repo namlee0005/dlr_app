@@ -6,7 +6,7 @@ import Typography from '@src/components/Typography';
 import Box from '@src/components/Box';
 import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
-import realm from '@src/realms/realm';
+import realm, { objectQuestionsFail } from '@src/realms/realm';
 import { useNavigation } from '@react-navigation/native';
 import {
   FlatList,
@@ -66,6 +66,31 @@ const HeaderRight = ({ idExam, visibleMenuAnswer, setVisibleMenuAnswer }) => {
     let sentenceParalysis = exam?.questions.filter(
       (i) => i.isSentenceParalysis === 1 && i.correctAnswer !== i.selected,
     );
+
+    let questionFails = exam?.questions.filter(
+      (i) => i.correctAnswer !== i.selected && i.selected !== -1,
+    );
+
+    let fails = realm.objects('QuestionsFail').map((i) => i);
+
+    questionFails?.map((item) => {
+      if (!fails) {
+        realm.write(() => {
+          realm.create('QuestionsFail', objectQuestionsFail(item));
+        });
+      } else {
+        let temp = fails.filter((e) => e.id === item.id)[0];
+        if (temp) {
+          realm.write(() => {
+            temp.count = temp.count + 1;
+          });
+        } else {
+          realm.write(() => {
+            realm.create('QuestionsFail', objectQuestionsFail(item));
+          });
+        }
+      }
+    });
 
     realm.write(() => {
       exam.status =

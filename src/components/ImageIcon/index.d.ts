@@ -343,7 +343,8 @@ interface ImageIconProps extends ImageProps {
     | 'trafficLights'
     | 'trash'
     | 'vote'
-    | 'warning';
+    | 'warning'
+    | 'warningCircle';
 }
 
 export default function ImageIcon(props: ImageIconProps): {};

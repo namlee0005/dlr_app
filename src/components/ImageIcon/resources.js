@@ -339,6 +339,7 @@ const resources = {
   trash: require('./resources/trash.png'),
   vote: require('./resources/vote.png'),
   warning: require('./resources/warning.png'),
+  warningCircle: require('./resources/warningCircle.png'),
 };
 
 export default resources;

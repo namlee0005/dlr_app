@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '@src/screens/SplashScreen';
 import MainDrawer from './Drawer';
 import ModalTitleNew from '@src/screens/ModalScreen/ModalTitleNew';
-
+import ModalEnd from '@src/screens/ModalScreen/ModalEnd';
 const Stack = createStackNavigator();
 
 const ModalStyleInterpolator = ({ layouts, current: { progress } }) => {
@@ -57,6 +57,15 @@ const Routes = () => {
         <Stack.Screen
           name="ModalTitleNew"
           component={ModalTitleNew}
+          options={{
+            headerShown: false,
+            cardStyle: { backgroundColor: 'transparent' },
+            cardStyleInterpolator: ModalStyleInterpolator,
+          }}
+        />
+        <Stack.Screen
+          name="ModalEnd"
+          component={ModalEnd}
           options={{
             headerShown: false,
             cardStyle: { backgroundColor: 'transparent' },

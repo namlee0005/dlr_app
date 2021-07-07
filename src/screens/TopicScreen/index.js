@@ -133,7 +133,7 @@ const TopicScreen = ({ navigation }) => {
             margin={[0, 10]}
             onPress={() => navigation.navigate('ModalTitleNew')}
           >
-            <ImageIcon name="random" square={24} />
+            <ImageIcon name="warningCircle" square={24} />
           </TouchableBox>
           <TouchableBox margin={[0, 10]} onPress={handleDecrease}>
             <ImageIcon name="random" square={24} />

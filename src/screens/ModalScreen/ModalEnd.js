@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 import colors from '@src/utils/colors';
 import TouchableBox from '@src/components/TouchableBox';
 
-const ModalTitleNew = ({ navigation, route }) => {
+const ModalEnd = ({ navigation, route }) => {
   const goBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
@@ -60,7 +60,7 @@ const ModalTitleNew = ({ navigation, route }) => {
   );
 };
 
-export default ModalTitleNew;
+export default ModalEnd;
 
 const styles = StyleSheet.create({
   box: { borderRadius: 16 },

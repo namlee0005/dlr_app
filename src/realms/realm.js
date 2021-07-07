@@ -75,6 +75,26 @@ const Theoretical = {
   },
 };
 
+const QuestionsFail = {
+  name: 'QuestionsFail',
+  primaryKey: 'id',
+  properties: {
+    id: 'string',
+    question: 'string',
+    explain: 'string?',
+    correctAnswer: 'int',
+    answer1: 'string?',
+    answer2: 'string?',
+    answer3: 'string?',
+    answer4: 'string?',
+    type: 'int?',
+    urlImage: 'string?',
+    isSentenceParalysis: 'int?',
+    selected: 'int?',
+    count: 'int?',
+  },
+};
+
 export const objectTheoretical = (realmObject, type) => {
   return {
     id: uuid(),
@@ -114,6 +134,26 @@ export const objectQuestions = (realmObject) => {
   };
 };
 
+export const objectQuestionsFail = (realmObject) => {
+  return {
+    id: uuid(),
+    question: realmObject?.question ? realmObject?.question : null,
+    explain: realmObject?.explain ? realmObject?.explain : null,
+    correctAnswer: realmObject?.correctAnswer
+      ? realmObject?.correctAnswer
+      : null,
+    answer1: realmObject?.answer1 ? realmObject?.answer1 : null,
+    answer2: realmObject?.answer2 ? realmObject?.answer2 : null,
+    answer3: realmObject?.answer3 ? realmObject?.answer3 : null,
+    answer4: realmObject?.answer4 ? realmObject?.answer4 : null,
+    type: realmObject?.type ? realmObject?.type : null,
+    urlImage: realmObject?.urlImage ? realmObject?.urlImage : null,
+    isSentenceParalysis: realmObject?.isSentenceParalysis,
+    selected: realmObject?.selected ? realmObject?.selected : null,
+    count: 1,
+  };
+};
+
 export default new Realm({
-  schema: [ExamA1, TopicExam, Questions, Theoretical],
+  schema: [ExamA1, TopicExam, Questions, Theoretical, QuestionsFail],
 });
