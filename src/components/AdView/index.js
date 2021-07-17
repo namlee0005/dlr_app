@@ -146,7 +146,7 @@ const AdView = React.memo(({ index, media, type, loadOnMount = true }) => {
     };
   }, [loadOnMount, type]);
 
-  return (
+  return !error ? (
     <NativeAdView
       ref={nativeAdRef}
       onAdLoaded={onAdLoaded}
@@ -193,7 +193,7 @@ const AdView = React.memo(({ index, media, type, loadOnMount = true }) => {
         {media ? <MediaView aspectRatio={aspectRatio} /> : null}
       </View>
     </NativeAdView>
-  );
+  ) : null;
 });
 
 const styles = StyleSheet.create({

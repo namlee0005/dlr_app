@@ -1,4 +1,10 @@
-import React, { useContext, useCallback, useLayoutEffect } from 'react';
+import React, {
+  useContext,
+  useCallback,
+  useLayoutEffect,
+  useState,
+  useEffect,
+} from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { StoreContext } from '@src/store';
 import ImageIcon from '@src/components/ImageIcon';
@@ -76,18 +82,22 @@ const ItemHome = ({ item, navigation, length, length2 }) => {
 
 const HomeScreen = ({ navigation }) => {
   const { state } = useContext(StoreContext);
+  const [length, setlength] = useState(realm.objects('TopicExam')?.length);
+  const [length1, setlength1] = useState(
+    realm.objects('QuestionsFail')?.length,
+  );
   const renderItem = useCallback(
     ({ item }) => {
       return (
         <ItemHome
           item={item}
           navigation={navigation}
-          length={realm.objects('TopicExam')?.length}
-          length2={realm.objects('QuestionsFail')?.length}
+          length={length}
+          length2={length1}
         />
       );
     },
-    [navigation],
+    [length, length1, navigation],
   );
 
   useLayoutEffect(() => {
@@ -100,6 +110,14 @@ const HomeScreen = ({ navigation }) => {
 
   const toggleDrawer = useCallback(() => {
     navigation.openDrawer();
+  }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      setlength(realm.objects('TopicExam')?.length);
+      setlength1(realm.objects('QuestionsFail')?.length);
+    });
+    return unsubscribe;
   }, [navigation]);
 
   return (

@@ -7,7 +7,7 @@ const dataCardHome = [
   {
     id: 1,
     image: 'document',
-    title: 'Thi Sát Hạch SPLX',
+    title: 'Thi Sát Hạch GPLX',
     content: '10 đề thi',
   },
   {

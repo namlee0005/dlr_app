@@ -5,6 +5,7 @@ import TabBar from './TabBar';
 import DropDown from './DropDown';
 import { tips } from '@src/utils/constant';
 import { ScrollView } from 'react-native-gesture-handler';
+import AdView from '@src/components/AdView';
 const TipsScreen = () => {
   const [isPractice, setPractice] = useState(false);
 
@@ -21,10 +22,11 @@ const TipsScreen = () => {
           <DropDown title={'Sa hình'} content={tips.tips3} />
         </ScrollView>
       ) : (
-        <ScrollView flex={1}>
-          <DropDown title={'Thực hành'} content={tips.tips4} />
-        </ScrollView>
-      )}
+          <ScrollView flex={1}>
+            <DropDown title={'Thực hành'} content={tips.tips4} />
+          </ScrollView>
+        )}
+      <AdView type="image" media={false} />
     </Box>
   );
 };

@@ -123,26 +123,33 @@ const QuestionFails = () => {
           visibleMenuAnswer={visibleMenuAnswer}
         />
       </Box>
-      <Box
-        margin={[16, 16]}
-        padding={[0, 10]}
-        background="white"
-        borderRadius={16}
-      >
-        <Box flexDirection="row" margin={[16, 16]} justify="space-between">
-          <TouchableBox onPress={onBack}>
-            <ImageIcon name="chevronLeftPurple" circle={14} />
-          </TouchableBox>
-          <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
-            Câu {flatIndex + 1} / {questionFails.length}
-          </Typography>
-          <TouchableBox onPress={onNext}>
-            <ImageIcon name="chevronRightPurple" circle={14} />
-          </TouchableBox>
+
+      {questionFails.length > 0 && (
+        <Box
+          margin={[16, 16]}
+          padding={[0, 10]}
+          background="white"
+          borderRadius={16}
+        >
+          <Box flexDirection="row" margin={[16, 16]} justify="space-between">
+            <TouchableBox onPress={onBack}>
+              <ImageIcon name="chevronLeftPurple" circle={14} />
+            </TouchableBox>
+            <Typography
+              fontSize={16}
+              style={styles.titleCard}
+              color={'#302EA7'}
+            >
+              Câu {flatIndex + 1} / {questionFails.length}
+            </Typography>
+            <TouchableBox onPress={onNext}>
+              <ImageIcon name="chevronRightPurple" circle={14} />
+            </TouchableBox>
+          </Box>
+          <Underlined style={styles.underlined} />
+          <ItemExam item={itemExam} flatIndex={flatIndex} />
         </Box>
-        <Underlined style={styles.underlined} />
-        <ItemExam item={itemExam} flatIndex={flatIndex} />
-      </Box>
+      )}
       {visibleMenuAnswer && (
         <TouchableWithoutFeedback onPress={onClickMenu}>
           <Box flex={1} style={styles.boxMenu}>

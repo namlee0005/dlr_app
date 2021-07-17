@@ -43,7 +43,8 @@ export const createA1Exam = (id, realm) => {
       let temp = randomItem(roadTrafficLaw);
       temp.selected = -1;
       temp.index = index;
-      if (!arr1.includes(temp)) {
+      let arrDuplicate = arr1.filter((e) => e.id === temp.id);
+      if (arrDuplicate.length === 0) {
         arr1.push(objectQuestions(temp));
       }
       index++;
@@ -55,7 +56,8 @@ export const createA1Exam = (id, realm) => {
       let temp = randomItem(trafficSigns);
       temp.selected = -1;
       temp.index = index;
-      if (!arr1.includes(temp)) {
+      let arrDuplicate = arr1.filter((e) => e.id === temp.id);
+      if (arrDuplicate.length === 0) {
         arr1.push(objectQuestions(temp));
       }
       index++;
@@ -67,7 +69,8 @@ export const createA1Exam = (id, realm) => {
       let temp = randomItem(sentenceSaHinh);
       temp.selected = -1;
       temp.index = index;
-      if (!arr1.includes(temp)) {
+      let arrDuplicate = arr1.filter((e) => e.id === temp.id);
+      if (arrDuplicate.length === 0) {
         arr1.push(objectQuestions(temp));
       }
       index++;
