@@ -11,14 +11,12 @@ const DEVICE = Dimensions.get('window');
 const TrafficSignsScreen = () => {
   const [images, setImages] = useState(bbc);
   const renderItem = useCallback(({ item }) => {
-    return (
+    const uri = resources[item?.image];
+    return uri ? (
       <Box align="center" justify="center" margin={[0, 0, 8, 0]}>
-        <AutoHeightImage
-          source={resources[item.image]}
-          width={DEVICE.width - 32}
-        />
+        <AutoHeightImage source={uri} width={DEVICE.width - 32} />
       </Box>
-    );
+    ) : null;
   }, []);
 
   return (
