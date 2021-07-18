@@ -12,7 +12,5 @@ Andoird:
 npx react native run-android
 
 IOS:
-cd ios
-pod install
-
+cd ios & pod install
 cd .. & npx react-native run-ios
