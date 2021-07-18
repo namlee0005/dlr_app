@@ -6,6 +6,8 @@ import {
   Dimensions,
   StyleSheet,
   TouchableWithoutFeedback,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import TouchableBox from '@src/components/TouchableBox';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +17,7 @@ import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
 import { v4 as uuid } from 'uuid';
 import AdView from '@src/components/AdView';
-
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 const HEIGHT = Dimensions.get('window').height;
 
 const HeaderLeft = ({ title }) => {
@@ -116,7 +118,11 @@ const QuestionFails = () => {
 
   return (
     <Box flex={1}>
-      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft title={'Các Câu Hay Sai'} />
         <HeaderRight
           setVisibleMenuAnswer={setVisibleMenuAnswer}
@@ -125,30 +131,36 @@ const QuestionFails = () => {
       </Box>
 
       {questionFails.length > 0 && (
-        <Box
-          margin={[16, 16]}
-          padding={[0, 10]}
-          background="white"
-          borderRadius={16}
+        <ScrollView
+          flex={1}
+          contentContainerStyle={styles.containerScrollView}
+          showsVerticalScrollIndicator={false}
         >
-          <Box flexDirection="row" margin={[16, 16]} justify="space-between">
-            <TouchableBox onPress={onBack}>
-              <ImageIcon name="chevronLeftPurple" circle={14} />
-            </TouchableBox>
-            <Typography
-              fontSize={16}
-              style={styles.titleCard}
-              color={'#302EA7'}
-            >
-              Câu {flatIndex + 1} / {questionFails.length}
-            </Typography>
-            <TouchableBox onPress={onNext}>
-              <ImageIcon name="chevronRightPurple" circle={14} />
-            </TouchableBox>
+          <Box
+            margin={[16, 16]}
+            padding={[0, 10]}
+            background="white"
+            borderRadius={16}
+          >
+            <Box flexDirection="row" margin={[16, 16]} justify="space-between">
+              <TouchableBox onPress={onBack}>
+                <ImageIcon name="chevronLeftPurple" circle={14} />
+              </TouchableBox>
+              <Typography
+                fontSize={16}
+                style={styles.titleCard}
+                color={'#302EA7'}
+              >
+                Câu {flatIndex + 1} / {questionFails.length}
+              </Typography>
+              <TouchableBox onPress={onNext}>
+                <ImageIcon name="chevronRightPurple" circle={14} />
+              </TouchableBox>
+            </Box>
+            <Underlined style={styles.underlined} />
+            <ItemExam item={itemExam} flatIndex={flatIndex} />
           </Box>
-          <Underlined style={styles.underlined} />
-          <ItemExam item={itemExam} flatIndex={flatIndex} />
-        </Box>
+        </ScrollView>
       )}
       {visibleMenuAnswer && (
         <TouchableWithoutFeedback onPress={onClickMenu}>
@@ -236,5 +248,8 @@ const styles = StyleSheet.create({
       color: '#ffffff',
     };
   },
-  ad: { position: 'absolute', bottom: 0, left: 0, right: 0 },
+  ad: { position: 'absolute', bottom: 8, left: 0, right: 0 },
+  containerScrollView: {
+    paddingBottom: Platform.OS === 'ios' ? getBottomSpace() + 88 : 112,
+  },
 });

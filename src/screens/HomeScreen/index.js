@@ -5,7 +5,13 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  Platform,
+  BackHandler,
+  Alert,
+} from 'react-native';
 import { StoreContext } from '@src/store';
 import ImageIcon from '@src/components/ImageIcon';
 import Box from '@src/components/Box';
@@ -14,7 +20,7 @@ import TouchableBox from '@src/components/TouchableBox';
 import colors from '@src/utils/colors';
 import realm from '@src/realms/realm';
 import AdView from '@src/components/AdView';
-
+import { titleHome } from '@src/utils/constant';
 const ItemHome = ({ item, navigation, length, length2 }) => {
   const onItemPress = useCallback(
     ({ id }) => {
@@ -86,6 +92,9 @@ const HomeScreen = ({ navigation }) => {
   const [length1, setlength1] = useState(
     realm.objects('QuestionsFail')?.length,
   );
+  const [title, setTitle] = useState(
+    titleHome[Math.floor(Math.random() * titleHome.length)],
+  );
   const renderItem = useCallback(
     ({ item }) => {
       return (
@@ -116,15 +125,47 @@ const HomeScreen = ({ navigation }) => {
     const unsubscribe = navigation.addListener('focus', async () => {
       setlength(realm.objects('TopicExam')?.length);
       setlength1(realm.objects('QuestionsFail')?.length);
+      setTitle(titleHome[Math.floor(Math.random() * titleHome.length)]);
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert(
+        'Thoát App',
+        'Bạn có muốn đóng ứng dụng?',
+        [
+          {
+            text: 'Không',
+            // onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Có',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ],
+        {
+          cancelable: false,
+        },
+      );
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <Box flex={1}>
       <Box background="#302EA7" borderRadius={[0, 0, 24, 24]} padding={[0, 16]}>
         <TouchableBox
-          margin={[50, 0, 0, 0]}
+          margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
           style={styles.button}
           onPress={toggleDrawer}
         >
@@ -137,8 +178,7 @@ const HomeScreen = ({ navigation }) => {
         </Box>
 
         <Typography color="white" padding={[0, 0, 10, 0]}>
-          Xe không có thắng - chạy thẳng vào hòm. Xe không có thắng - chạy thẳng
-          vào hòm.
+          {title}
         </Typography>
       </Box>
       <Box flex={1} padding={[16, 16, 0, 16]}>

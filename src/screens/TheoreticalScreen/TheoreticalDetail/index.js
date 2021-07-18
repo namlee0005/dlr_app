@@ -9,11 +9,15 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import ItemExam from './ItemExam';
 import realm from '@src/realms/realm';
 import { useNavigation } from '@react-navigation/native';
 import { v4 as uuid } from 'uuid';
+import AdView from '@src/components/AdView';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 const HEIGHT = Dimensions.get('window').height;
 
@@ -118,33 +122,47 @@ const TheoreticalDetail = ({ navigation, route }) => {
 
   return (
     <Box flex={1}>
-      <Box margin={[50, 0, 16, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 8, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft title={route?.params?.title} />
         <HeaderRight
           setVisibleMenuAnswer={setVisibleMenuAnswer}
           visibleMenuAnswer={visibleMenuAnswer}
         />
       </Box>
-      <Box
-        margin={[0, 16]}
-        padding={[0, 10]}
-        background="white"
-        borderRadius={16}
+      <ScrollView
+        flex={1}
+        contentContainerStyle={styles.containerScrollView}
+        showsVerticalScrollIndicator={false}
       >
-        <Box flexDirection="row" margin={[16, 16]} justify="space-between">
-          <TouchableBox onPress={onBack}>
-            <ImageIcon name="chevronLeftPurple" circle={14} />
-          </TouchableBox>
-          <Typography fontSize={16} style={styles.titleCard} color={'#302EA7'}>
-            Câu {flatIndex + 1} / {examTheoretical.length}
-          </Typography>
-          <TouchableBox onPress={onNext}>
-            <ImageIcon name="chevronRightPurple" circle={14} />
-          </TouchableBox>
+        <Box
+          margin={[0, 16]}
+          padding={[0, 10]}
+          background="white"
+          borderRadius={16}
+        >
+          <Box flexDirection="row" margin={[16, 16]} justify="space-between">
+            <TouchableBox onPress={onBack}>
+              <ImageIcon name="chevronLeftPurple" circle={14} />
+            </TouchableBox>
+            <Typography
+              fontSize={16}
+              style={styles.titleCard}
+              color={'#302EA7'}
+            >
+              Câu {flatIndex + 1} / {examTheoretical.length}
+            </Typography>
+            <TouchableBox onPress={onNext}>
+              <ImageIcon name="chevronRightPurple" circle={14} />
+            </TouchableBox>
+          </Box>
+          <Underlined style={styles.underlined} />
+          <ItemExam item={itemExam} flatIndex={flatIndex} />
         </Box>
-        <Underlined style={styles.underlined} />
-        <ItemExam item={itemExam} flatIndex={flatIndex} />
-      </Box>
+      </ScrollView>
       {visibleMenuAnswer && (
         <TouchableWithoutFeedback onPress={onClickMenu}>
           <Box flex={1} style={styles.boxMenu}>
@@ -167,6 +185,9 @@ const TheoreticalDetail = ({ navigation, route }) => {
           </Box>
         </TouchableWithoutFeedback>
       )}
+      <Box style={styles.ad}>
+        <AdView type="image" media={false} />
+      </Box>
     </Box>
   );
 };
@@ -225,6 +246,10 @@ const styles = StyleSheet.create({
       fontSize: 9,
       color: '#ffffff',
     };
+  },
+  ad: { position: 'absolute', bottom: 8, left: 0, right: 0 },
+  containerScrollView: {
+    paddingBottom: Platform.OS === 'ios' ? getBottomSpace() + 88 : 112,
   },
 });
 

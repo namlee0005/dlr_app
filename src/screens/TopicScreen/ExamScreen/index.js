@@ -13,10 +13,12 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { v4 as uuid } from 'uuid';
 import AdView from '@src/components/AdView';
 import { ScrollView } from 'react-native-gesture-handler';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 const HeaderLeft = ({ time, idExam, title, status, total }) => {
   const navigation = useNavigation();
@@ -104,22 +106,29 @@ const HeaderRight = ({ idExam, visibleMenuAnswer, setVisibleMenuAnswer }) => {
     setVisibleMenuAnswer(!visibleMenuAnswer);
   }, [setVisibleMenuAnswer, visibleMenuAnswer]);
 
-  return exam.status < 3 ? (
-    <Box flexDirection="row" margin={[0, 0, 0, 16]}>
-      <TouchableBox onPress={submit} margin={[0, 0, 0, 8]}>
-        <Typography fontSize={18} fontStyle="bold" color={'#E21B00'}>
-          Kết thúc
-        </Typography>
-      </TouchableBox>
-      <TouchableBox onPress={onClickMenu}>
+  const renderUI = useCallback(() => {
+    if (exam.status < 3) {
+      return (
+        <Box flexDirection="row" margin={[0, 0, 0, 16]}>
+          <TouchableBox onPress={submit} margin={[0, 0, 0, 8]}>
+            <Typography fontSize={18} fontStyle="bold" color={'#E21B00'}>
+              Kết thúc
+            </Typography>
+          </TouchableBox>
+          <TouchableBox onPress={onClickMenu}>
+            <ImageIcon name="menuAnswer" square={24} />
+          </TouchableBox>
+        </Box>
+      );
+    }
+    return (
+      <TouchableBox margin={[0, 0, 0, 16]} onPress={onClickMenu}>
         <ImageIcon name="menuAnswer" square={24} />
       </TouchableBox>
-    </Box>
-  ) : (
-    <TouchableBox margin={[0, 0, 0, 16]} onPress={onClickMenu}>
-      <ImageIcon name="menuAnswer" square={24} />
-    </TouchableBox>
-  );
+    );
+  }, [exam.status, onClickMenu, submit]);
+
+  return renderUI();
 };
 
 const HEIGHT = Dimensions.get('window').height;
@@ -214,7 +223,11 @@ const ExamScreen = ({ route }) => {
 
   return (
     <Box flex={1}>
-      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft
           time={countDown}
           idExam={route.params.idExam}
@@ -228,7 +241,11 @@ const ExamScreen = ({ route }) => {
           visibleMenuAnswer={visibleMenuAnswer}
         />
       </Box>
-      <ScrollView>
+      <ScrollView
+        flex={1}
+        contentContainerStyle={styles.containerScrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <Box
           margin={[16, 16, 0, 16]}
           padding={[0, 10]}
@@ -348,7 +365,10 @@ const styles = StyleSheet.create({
       color: status === 3 ? '#ffffff' : null,
     };
   },
-  ad: { position: 'absolute', bottom: 0, left: 0, right: 0 },
+  ad: { position: 'absolute', bottom: 8, left: 0, right: 0 },
+  containerScrollView: {
+    paddingBottom: Platform.OS === 'ios' ? getBottomSpace() + 88 : 112,
+  },
 });
 
 export default ExamScreen;

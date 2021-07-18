@@ -34,11 +34,11 @@ export const adUnitIDs = {
   image:
     Platform.OS === 'ios'
       ? 'ca-app-pub-1166686303975319/2523575347'
-      : 'ca-app-pub-3940256099942544/2247696110',
+      : 'ca-app-pub-1166686303975319/3748139053',
   video:
     Platform.OS === 'ios'
       ? 'ca-app-pub-1166686303975319/2523575347'
-      : 'ca-app-pub-3940256099942544/1044960115',
+      : 'ca-app-pub-1166686303975319/3748139053',
 };
 
 export const Events = {

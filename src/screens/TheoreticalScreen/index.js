@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
-import { FlatList, Dimensions, StyleSheet } from 'react-native';
+import { FlatList, Dimensions, StyleSheet, Platform } from 'react-native';
 import ImageIcon from '@src/components/ImageIcon';
 import TouchableBox from '@src/components/TouchableBox';
 import realm from '@src/realms/realm';
@@ -171,7 +171,11 @@ const TheoreticalScreen = ({ navigation }) => {
 
   return (
     <Box flex={1} margin={[0, 16]}>
-      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft />
         <HeaderRight />
       </Box>
@@ -181,6 +185,7 @@ const TheoreticalScreen = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
           extraData={examTheoretical}
+          showsVerticalScrollIndicator={false}
         />
       </Box>
       <AdView type="image" media={false} />

@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
   nativeAdView: {
     width: '98%',
     alignSelf: 'center',
+    backgroundColor: 'white',
   },
   itemContainer: {
     width: '100%',

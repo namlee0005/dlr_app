@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Box from '@src/components/Box';
 import HeaderLeft from '@src/components/HeaderLeft';
-import { Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList, Platform } from 'react-native';
 import AutoHeightImage from 'react-native-auto-height-image';
 import TabBar from './TabBar';
 import { bbc } from '@src/utils/constant';
@@ -23,7 +23,11 @@ const TrafficSignsScreen = () => {
 
   return (
     <Box flex={1} margin={[0, 16]}>
-      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft />
       </Box>
       <TabBar setImages={setImages} />

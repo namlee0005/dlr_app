@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, Platform } from 'react-native';
 import Box from '@src/components/Box';
 import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
@@ -126,7 +126,11 @@ const TopicScreen = ({ navigation }) => {
   );
   return (
     <Box flex={1} margin={[0, 16]}>
-      <Box margin={[50, 0, 0, 0]} flexDirection="row" justify="space-between">
+      <Box
+        margin={[Platform.OS === 'ios' ? 50 : 30, 0, 0, 0]}
+        flexDirection="row"
+        justify="space-between"
+      >
         <HeaderLeft />
         <Box flexDirection="row">
           <TouchableBox
