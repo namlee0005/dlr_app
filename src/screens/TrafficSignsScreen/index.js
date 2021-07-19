@@ -10,6 +10,7 @@ const DEVICE = Dimensions.get('window');
 
 const TrafficSignsScreen = () => {
   const [images, setImages] = useState(bbc);
+  const [index, setIndex] = useState(0);
   const renderItem = useCallback(({ item }) => {
     const uri = resources[item?.image];
     return uri ? (
@@ -28,7 +29,7 @@ const TrafficSignsScreen = () => {
       >
         <HeaderLeft />
       </Box>
-      <TabBar setImages={setImages} />
+      <TabBar setImages={setImages} index={index} setIndex={setIndex} />
       <Box flex={1}>
         <FlatList
           data={images}

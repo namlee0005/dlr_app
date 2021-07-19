@@ -14,8 +14,15 @@ const data = [
   { type: 5, name: 'Biển phụ', selected: false },
 ];
 
-const TabBar = ({ setImages }) => {
-  const [tabBarData, setTabBarData] = useState(data);
+const TabBar = ({ setImages, index, setIndex }) => {
+  const initData = useCallback(() => {
+    const temp = [...data];
+    setIndex(1);
+    temp.map((i) => (i.selected = false));
+    temp[0].selected = true;
+    return temp;
+  }, [setIndex]);
+  const [tabBarData, setTabBarData] = useState(index === 0 ? initData() : data);
 
   const refFlatList = useRef(null);
 
