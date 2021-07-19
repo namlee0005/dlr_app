@@ -5,7 +5,7 @@ import TabBar from './TabBar';
 import DropDown from './DropDown';
 import { tips } from '@src/utils/constant';
 import { ScrollView } from 'react-native-gesture-handler';
-import AdView from '@src/components/AdView';
+// import AdView from '@src/components/AdView';
 import { Platform } from 'react-native';
 
 const TipsScreen = () => {
@@ -39,7 +39,7 @@ const TipsScreen = () => {
       </Box>
       <TabBar setPractice={setPractice} />
       {renderUI()}
-      <AdView type="image" media={false} />
+      {/* <AdView type="image" media={false} /> */}
     </Box>
   );
 };

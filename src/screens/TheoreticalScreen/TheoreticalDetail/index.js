@@ -16,7 +16,7 @@ import ItemExam from './ItemExam';
 import realm from '@src/realms/realm';
 import { useNavigation } from '@react-navigation/native';
 import { v4 as uuid } from 'uuid';
-import AdView from '@src/components/AdView';
+// import AdView from '@src/components/AdView';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 const HEIGHT = Dimensions.get('window').height;
@@ -185,9 +185,9 @@ const TheoreticalDetail = ({ navigation, route }) => {
           </Box>
         </TouchableWithoutFeedback>
       )}
-      <Box style={styles.ad}>
+      {/* <Box style={styles.ad}>
         <AdView type="image" media={false} />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

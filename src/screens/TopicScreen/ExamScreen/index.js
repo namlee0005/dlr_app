@@ -16,7 +16,7 @@ import {
   Platform,
 } from 'react-native';
 import { v4 as uuid } from 'uuid';
-import AdView from '@src/components/AdView';
+// import AdView from '@src/components/AdView';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
@@ -299,9 +299,9 @@ const ExamScreen = ({ route }) => {
           </Box>
         </TouchableWithoutFeedback>
       )}
-      <Box style={styles.ad}>
+      {/* <Box style={styles.ad}>
         <AdView type="image" media={false} />
-      </Box>
+      </Box> */}
     </Box>
   );
 };

@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import CircleExam from '@src/components/CircleExam';
 import { createA1Exam } from '@src/utils/handleA1Exam';
 import HeaderLeft from '@src/components/HeaderLeft';
-import AdView from '@src/components/AdView';
+// import AdView from '@src/components/AdView';
 
 const ItemTopic = ({ item, navigation }) => {
   const numberAnswered = useCallback(() => {
@@ -49,13 +49,38 @@ const ItemTopic = ({ item, navigation }) => {
   }, [item]);
   // 1: làm bài, 2: đang làm, 3: xong
   const getContent = useCallback(
-    (total) => {
+    (total, id) => {
+      const exam = realm
+        .objects('TopicExam')
+        .filtered('id =  ' + id)
+        .map((i) => i)[0];
+
+      let questionFails = exam?.questions.filter(
+        (i) => i.correctAnswer !== i.selected && i.selected !== -1,
+      );
+
+      let noAnswered = exam?.questions.filter((i) => i.selected === -1);
+
       if (item?.status === 1) {
         return '25 câu/19 phút';
       } else if (item?.status === 2) {
         return `Còn ${convertLongToTime1(item?.time)}`;
       }
-      return 'Đúng ' + total + '/25';
+      return (
+        <Typography fontSize={13} padding={[8, 0, 0, 0]} color={'green'}>
+          {'Đúng: ' + total}
+          <Typography fontSize={13} padding={[8, 0, 0, 0]} color={'red'}>
+            {' Sai: ' + questionFails.length}
+          </Typography>
+          <Typography
+            fontSize={13}
+            padding={[8, 0, 0, 0]}
+            color={'rgb(242,153,74)'}
+          >
+            {' Chưa trả lời: ' + noAnswered.length}
+          </Typography>
+        </Typography>
+      );
     },
     [item],
   );
@@ -84,7 +109,7 @@ const ItemTopic = ({ item, navigation }) => {
             <Box padding={[0, 16, 0, 0]}>
               <Typography fontSize={16}>{item.title}</Typography>
               <Typography fontSize={13} padding={[8, 0, 0, 0]}>
-                {getContent(item?.total)}
+                {getContent(item?.total, item?.id)}
               </Typography>
             </Box>
           </Box>
@@ -151,7 +176,7 @@ const TopicScreen = ({ navigation }) => {
         extraData={topicExam}
         showsVerticalScrollIndicator={false}
       />
-      <AdView type="image" media={false} />
+      {/* <AdView type="image" media={false} /> */}
     </Box>
   );
 };
