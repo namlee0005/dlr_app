@@ -8,6 +8,8 @@ import { v4 as uuid } from 'uuid';
 import realm from '@src/realms/realm';
 import Underlined from '@src/components/Underlined';
 import ImageIcon from '@src/components/ImageIcon';
+import FastImage from 'react-native-fast-image';
+import resources from '@src/components/ImageIcon/resources';
 const DEVICE = Dimensions.get('window');
 
 const ItemExam = ({ item, flatIndex, idExam, status }) => {
@@ -64,6 +66,9 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
             return '#E21B00';
           }
         }
+        if (number + 1 === item?.correctAnswer) {
+          return '#302EA7';
+        }
         return '#4F4F4F';
       }
       if (checkBox.find((e) => e.index === number)?.isSelected) {
@@ -84,6 +89,9 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
             return styles.numberAnswerFail;
           }
         }
+        if (number + 1 === item?.correctAnswer) {
+          return styles.numberAnswerSelected;
+        }
         return null;
       }
       if (checkBox.find((e) => e.index === number)?.isSelected) {
@@ -92,6 +100,74 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
       return null;
     },
     [checkBox, item?.correctAnswer, item?.selected, status],
+  );
+
+  const getBgNumber = useCallback(
+    (number) => {
+      if (status === 3 || status === 4) {
+        if (number + 1 === item?.selected) {
+          return styles.textNumberAnswer;
+        }
+        if (number + 1 === item?.correctAnswer) {
+          return styles.textNumberAnswer;
+        }
+        return styles.textNumberAnswer1;
+      }
+
+      if (number + 1 === item?.selected) {
+        return styles.textNumberAnswer;
+      }
+
+      return styles.textNumberAnswer1;
+    },
+    [item?.correctAnswer, item?.selected, status],
+  );
+
+  const getAnswers = useCallback(
+    (number, answers) => {
+      if (status === 3 || status === 4) {
+        if (number + 1 === item?.selected) {
+          if (item?.selected === item?.correctAnswer) {
+            return (
+              <Typography>
+                {answers.trim()}{' '}
+                <FastImage
+                  source={resources.check}
+                  style={styles.heightIcon}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+              </Typography>
+            );
+          } else {
+            return (
+              <Typography>
+                {answers.trim()}{' '}
+                <FastImage
+                  source={resources.close}
+                  style={styles.heightIcon}
+                  resizeMode={FastImage.resizeMode.contain}
+                />
+              </Typography>
+            );
+          }
+        }
+        if (number + 1 === item?.correctAnswer) {
+          return (
+            <Typography>
+              {answers.trim()}{' '}
+              <FastImage
+                source={resources.check}
+                style={styles.heightIcon}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </Typography>
+          );
+        }
+        return answers.trim();
+      }
+      return answers.trim();
+    },
+    [item?.correctAnswer, item?.selected, status],
   );
 
   const renderAnswer = (answers, number) => {
@@ -106,19 +182,11 @@ const ItemExam = ({ item, flatIndex, idExam, status }) => {
             disabled={status === 3 || status === 4}
           >
             <Box style={[styles.numberAnswer, getColorNumberAnswer(number)]}>
-              <Typography
-                style={
-                  checkBox.find((e) => e.index === number)?.isSelected
-                    ? styles.textNumberAnswer
-                    : styles.textNumberAnswer1
-                }
-              >
-                {number + 1}
-              </Typography>
+              <Typography style={getBgNumber(number)}>{number + 1}</Typography>
             </Box>
             <Box style={styles.answer}>
               <Typography color={getColorAnswer(number)}>
-                {answers.trim()}
+                {getAnswers(number, answers)}
               </Typography>
             </Box>
           </TouchableBox>
@@ -190,4 +258,5 @@ const styles = StyleSheet.create({
   image: { width: DEVICE.width - 32 - 32, height: 200 },
   answer: { flexShrink: 1 },
   underlined: { backgroundColor: '#302EA7' },
+  heightIcon: { height: 16, width: 24 },
 });
