@@ -19,8 +19,8 @@ import Typography from '@src/components/Typography';
 import TouchableBox from '@src/components/TouchableBox';
 import colors from '@src/utils/colors';
 import realm from '@src/realms/realm';
-// import AdView from '@src/components/AdView';
-// import { titleHome } from '@src/utils/constant';
+import AdView from '@src/components/AdView';
+import { titleHome } from '@src/utils/constant';
 const ItemHome = ({ item, navigation, length, length2 }) => {
   const onItemPress = useCallback(
     ({ id }) => {
@@ -92,9 +92,9 @@ const HomeScreen = ({ navigation }) => {
   const [length1, setlength1] = useState(
     realm.objects('QuestionsFail')?.length,
   );
-  // const [title, setTitle] = useState(
-  //   titleHome[Math.floor(Math.random() * titleHome.length)],
-  // );
+  const [title, setTitle] = useState(
+    titleHome[Math.floor(Math.random() * titleHome.length)],
+  );
   const renderItem = useCallback(
     ({ item }) => {
       return (
@@ -125,7 +125,7 @@ const HomeScreen = ({ navigation }) => {
     const unsubscribe = navigation.addListener('focus', async () => {
       setlength(realm.objects('TopicExam')?.length);
       setlength1(realm.objects('QuestionsFail')?.length);
-      // setTitle(titleHome[Math.floor(Math.random() * titleHome.length)]);
+      setTitle(titleHome[Math.floor(Math.random() * titleHome.length)]);
     });
     return unsubscribe;
   }, [navigation]);
@@ -177,9 +177,9 @@ const HomeScreen = ({ navigation }) => {
           </Typography>
         </Box>
 
-        {/* <Typography color="white" padding={[0, 0, 10, 0]}>
+        <Typography color="white" padding={[0, 0, 10, 0]}>
           {title}
-        </Typography> */}
+        </Typography>
       </Box>
       <Box flex={1} padding={[16, 16, 0, 16]}>
         <FlatList
@@ -188,7 +188,7 @@ const HomeScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
         />
-        {/* <AdView type="image" media={false} /> */}
+        <AdView type="image" media={false} />
       </Box>
     </Box>
   );

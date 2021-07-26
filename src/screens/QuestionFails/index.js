@@ -16,7 +16,7 @@ import realm from '@src/realms/realm';
 import Underlined from '@src/components/Underlined';
 import ItemExam from './ItemExam';
 import { v4 as uuid } from 'uuid';
-// import AdView from '@src/components/AdView';
+import AdView from '@src/components/AdView';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 const HEIGHT = Dimensions.get('window').height;
 
@@ -184,9 +184,9 @@ const QuestionFails = () => {
           </Box>
         </TouchableWithoutFeedback>
       )}
-      {/* <Box style={styles.ad}>
+      <Box style={styles.ad}>
         <AdView type="image" media={false} />
-      </Box> */}
+      </Box>
     </Box>
   );
 };

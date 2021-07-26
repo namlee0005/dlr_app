@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import CircleExam from '@src/components/CircleExam';
 import { createA1Exam } from '@src/utils/handleA1Exam';
 import HeaderLeft from '@src/components/HeaderLeft';
-// import AdView from '@src/components/AdView';
+import AdView from '@src/components/AdView';
 
 const ItemTopic = ({ item, navigation }) => {
   const numberAnswered = useCallback(() => {
@@ -176,7 +176,7 @@ const TopicScreen = ({ navigation }) => {
         extraData={topicExam}
         showsVerticalScrollIndicator={false}
       />
-      {/* <AdView type="image" media={false} /> */}
+      <AdView type="image" media={false} />
     </Box>
   );
 };
